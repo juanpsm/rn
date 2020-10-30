@@ -7,6 +7,7 @@ GEM
 
 PLATFORMS
   ruby
+  x64-mingw32
 
 DEPENDENCIES
   dry-cli (~> 0.6)
