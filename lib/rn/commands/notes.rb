@@ -33,8 +33,15 @@ module RN
       end
 
       def self.viewer(file)
-        puts "Title: #{File.basename(file, ".*")}"
-        File.foreach(file) { |line| puts line }
+        long = File.foreach(file).collect{ |line| line.size }
+        title = "Title: #{File.basename(file, ".*")}"
+        long << title.size
+        ancho = long.max + 2
+        puts "+#{'-'*ancho}+"
+        puts "|#{title.center(ancho)}|"
+        puts "+#{'-'*ancho}+"
+        File.foreach(file) { |line| puts "|#{line.chomp.center(ancho)}|" }
+        puts "+#{'-'*ancho}+"
       end
 
       class Create < Dry::CLI::Command
@@ -202,11 +209,12 @@ module RN
           book = options[:book]
           # warn "TODO: Implementar vista de la nota con título '#{title}' (del libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           file = Notes.path(title, book)
+          p  RN::Note.new(title, book)
           unless Notes.exists?(title, book)
             warn "There is not any note titled '#{title}'#{" in book '#{book}'" if book}."
             return false
           end
-          warn "Opened note '#{title}'#{" in book '#{book}'" if book}."
+          warn "Opened note '#{title}'#{" from book '#{book}'" if book}."
           puts "file: #{file}"
           Notes.viewer(file)
           return true
