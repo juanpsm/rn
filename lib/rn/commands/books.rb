@@ -38,27 +38,31 @@ module RN
 
         def call(name: nil, **options)
           global = options[:global]
-          # warn "TODO: Implementar borrado del cuaderno de notas con nombre '#{name}' (global=#{global}).\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          prompt = TTY::Prompt.new
+          
           if global then
-            puts "This will delete all notes fron the global book, are you sure? (Y/N)"
-            confirm = STDIN.gets.chomp
-            if confirm == "Y"
+            # confirm = STDIN.gets.chomp 
+            cancel = prompt.no?("This will delete all notes fron the global book, are you sure?")
+            unless cancel 
               RN::Book.deleteRootNotes
+            else
+              prompt.error("Canceled")
             end
           elsif name
             book = RN::Book.lookup(name)
             if book
-              puts "This will delete all notes from book '#{book.name}', are you sure? (Y/N)"
-              confirm = STDIN.gets.chomp
-              if confirm == "Y"
+              cancel = prompt.no?("This will delete all notes from book '#{book.name}', are you sure?")
+              unless cancel 
                 RN::Book.delete(name)
-                warn "Removed book '#{name}'."
+                prompt.ok("Removed book '#{name}'.")
+              else
+                prompt.error("Canceled")
               end
             else
-              warn "Book '#{name}' does not exist!"
+              prompt.warn("Book '#{name}' does not exist!")
             end
           else
-            puts "Delete called with no arguments or options"
+            prompt.error("Delete called with no arguments or options")
           end
         end
       end
