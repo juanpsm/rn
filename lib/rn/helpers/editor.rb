@@ -7,8 +7,8 @@ module RN
         menu.default 1
 
         menu.choice "Choose from your system", 1
-        menu.choice "Use my wonderfully programmed editor", 2
-        menu.choice "Scorpion", 3, disabled: "(out of stock)"
+        menu.choice "Use my wonderfully programmed editor (will overwrite file if exists)", 2
+        menu.choice "PBRUSH.EXE", 3, disabled: "(only win 3.11)"
       end
       if opt == 1
         getEditorFromSystem(filepath)
