@@ -97,6 +97,7 @@ module RN
     end
 
     def self.createFile(name, foldername)
+      createFolder(foldername) unless folderExists?(foldername)
       File.new(filePath(name, foldername), "w+")
     end
 
