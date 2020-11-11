@@ -115,7 +115,7 @@ module RN
         def call(**options)
           book = options[:book]
           global = options[:global]
-          # warn "TODO: Implementar listado de las notas del libro '#{book}' (global=#{global}).\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+
           notes = []
           if book
             notes << RN::Book.getNotes(book)
@@ -130,7 +130,7 @@ module RN
               notes << RN::Book.getNotes(each)
             end
           end
-          puts "#{"\nTodas las " unless global || book}Notas#{" del cuaderno #{book ? ("'#{book}'#{" y global" if global}") : "global"}" if global || book}:\n"
+          puts "#{"\nAll " unless global || book}Notes#{" from book #{book ? ("'#{book}'#{" & global" if global}") : "global"}" if global || book}:\n"
           notes.flatten!
           notes.each_slice(5) { |row| puts row.map{|e| "%10s" % e}.join("  ") }
         end

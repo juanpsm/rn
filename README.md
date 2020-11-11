@@ -114,7 +114,7 @@ puede requerir algún trabajo adicional de tu parte.
 
   * Armado de ejemplos en las mismas llamadas a los comandos
   * https://stackoverflow.com/questions/36350321/errnoenoent-no-such-file-or-directory-rb-sysopen
-  * Editod de notas "a mano"
+  * Editor de notas "a mano"
     ```ruby
     prompt = "RN>> "
     eof = "EON"
@@ -135,5 +135,7 @@ puede requerir algún trabajo adicional de tu parte.
       f.truncate(f.pos)
     }
     ```
-  * Agregar [logger](https://github.com/piotrmurach/tty-logger), [colores](), [prompt](https://github.com/piotrmurach/tty-prompt), [font?](https://github.com/piotrmurach/tty-font), [box](https://github.com/piotrmurach/tty-box)
+  * (Quizás) Agregar [logger](https://github.com/piotrmurach/tty-logger), [colores](), [prompt](https://github.com/piotrmurach/tty-prompt), [font?](https://github.com/piotrmurach/tty-font), [box](https://github.com/piotrmurach/tty-box)
 
+  * Separar Modelo de Comandos
+  * Separar manejo de archivos de Modelo

@@ -16,10 +16,10 @@ module RN
           # warn "TODO: Implementar creación del cuaderno de notas con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           book = RN::Book.create(name)
           unless book
-            warn "El cuaderno ya existe"
+            warn "Book #{name} already exists!"
           else
-            warn "Directorio: #{book.path}"
             warn "Created book: #{book.name}"
+            warn "Dir: #{book.path}"
           end
         end
       end
