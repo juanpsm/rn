@@ -1,6 +1,7 @@
 module RN
   module Commands
     module Notes
+
       class Create < Dry::CLI::Command
         desc 'Create a note'
 
@@ -15,7 +16,16 @@ module RN
 
         def call(title:, **options)
           book = options[:book]
-          warn "TODO: Implementar creación de la nota con título '#{title}' (en el libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+
+          if book
+            Books::Create.new.call(name:book) unless RN::Book.new(book).exists?
+          end
+          note = RN::Note.create(title, book)
+          unless note
+            warn "A note titled '#{title}' already exists#{" in book '#{book}'" if book}."
+          else
+            warn "Created note '#{note.title}'#{" in book '#{book}'" if book}."
+          end
         end
       end
 
@@ -33,12 +43,19 @@ module RN
 
         def call(title:, **options)
           book = options[:book]
-          warn "TODO: Implementar borrado de la nota con título '#{title}' (del libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          # warn "TODO: Implementar borrado de la nota con título '#{title}' (del libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          note = RN::Note.lookup(title, book)
+          unless note
+            warn "There is not any note titled '#{title}'#{" in book '#{book}'" if book}."
+          else
+            RN::Note.delete(note)
+            warn "Deleted note '#{title}'#{" from book '#{book}'" if book}."
+          end
         end
       end
 
       class Edit < Dry::CLI::Command
-        desc 'Edit the content a note'
+        desc 'Edit the content of a note'
 
         argument :title, required: true, desc: 'Title of the note'
         option :book, type: :string, desc: 'Book'
@@ -51,7 +68,14 @@ module RN
 
         def call(title:, **options)
           book = options[:book]
-          warn "TODO: Implementar modificación de la nota con título '#{title}' (del libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          # warn "TODO: Implementar modificación de la nota con título '#{title}' (del libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          note = RN::Note.lookup(title, book)
+          unless note
+            warn "There is not any note titled '#{title}'#{" in book '#{book}'" if book}."
+          else
+            RN::Note.edit(note)
+            warn "Edited note '#{title}'#{" from book '#{book}'" if book}."
+          end
         end
       end
 
@@ -70,7 +94,8 @@ module RN
 
         def call(old_title:, new_title:, **options)
           book = options[:book]
-          warn "TODO: Implementar cambio del título de la nota con título '#{old_title}' hacia '#{new_title}' (del libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          # warn "TODO: Implementar cambio del título de la nota con título '#{old_title}' hacia '#{new_title}' (del libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          RN::Note.rename(old_title, new_title, book)
         end
       end
 
@@ -90,7 +115,24 @@ module RN
         def call(**options)
           book = options[:book]
           global = options[:global]
-          warn "TODO: Implementar listado de las notas del libro '#{book}' (global=#{global}).\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+
+          notes = []
+          if book
+            notes << RN::Book.getNotes(book)
+          end
+          if global
+            notes << RN::Book.rootNotes
+          end
+          unless global || book
+            notes << RN::Book.rootNotes
+            RN::Book.getAllNames.each do
+              |each|
+              notes << RN::Book.getNotes(each)
+            end
+          end
+          puts "#{"\nAll " unless global || book}Notes#{" from book #{book ? ("'#{book}'#{" & global" if global}") : "global"}" if global || book}:\n"
+          notes.flatten!
+          notes.each_slice(5) { |row| puts row.map{|e| "%10s" % e}.join("  ") }
         end
       end
 
@@ -108,7 +150,14 @@ module RN
 
         def call(title:, **options)
           book = options[:book]
-          warn "TODO: Implementar vista de la nota con título '#{title}' (del libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          # warn "TODO: Implementar vista de la nota con título '#{title}' (del libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          note = RN::Note.lookup(title, book)
+          unless note
+            warn "There is not any note titled '#{title}'#{" in book '#{book}'" if book}."
+          else
+            RN::Note.show(note)
+            warn "Viewed note '#{title}'#{" from book '#{book}'" if book}."
+          end
         end
       end
     end

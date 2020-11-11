@@ -109,3 +109,33 @@ puede requerir algún trabajo adicional de tu parte.
   * `lib/rn/version.rb` define la versión de la herramienta, utilizando [SemVer](https://semver.org/lang/es/).
 * `bin/`: directorio donde reside cualquier archivo ejecutable, siendo el más notorio `rn`
   que se utiliza como punto de entrada para el uso de la herramienta.
+
+  ### Notas de desarrollo
+
+  * Armado de ejemplos en las mismas llamadas a los comandos
+  * https://stackoverflow.com/questions/36350321/errnoenoent-no-such-file-or-directory-rb-sysopen
+  * Editor de notas "a mano"
+    ```ruby
+    prompt = "RN>> "
+    eof = "EON"
+    eof_feedback = " [End Of Note]\n"
+    File.open(file, File::RDWR|File::CREAT, 0644) {|f|
+      f.flock(File::LOCK_EX)
+      f.rewind
+      print "\nWrite the contents of the note below.\nYou can write multiple lines.\nEnd the note with '#{eof}' + [Enter].\n\n#{prompt}"
+      content = ""
+      input_line = STDIN.gets
+        while input_line.chomp != eof
+          content << input_line
+          print "#{prompt}"
+          input_line = STDIN.gets
+        end
+      print eof_feedback
+      f.write content
+      f.truncate(f.pos)
+    }
+    ```
+  * (Quizás) Agregar [logger](https://github.com/piotrmurach/tty-logger), [colores](), [prompt](https://github.com/piotrmurach/tty-prompt), [font?](https://github.com/piotrmurach/tty-font), [box](https://github.com/piotrmurach/tty-box)
+
+  * Separar Modelo de Comandos
+  * Separar manejo de archivos de Modelo

@@ -1,6 +1,7 @@
 module RN
   module Commands
     module Books
+
       class Create < Dry::CLI::Command
         desc 'Create a book'
 
@@ -12,7 +13,14 @@ module RN
         ]
 
         def call(name:, **)
-          warn "TODO: Implementar creación del cuaderno de notas con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          # warn "TODO: Implementar creación del cuaderno de notas con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          book = RN::Book.create(name)
+          unless book
+            warn "Book #{name} already exists!"
+          else
+            warn "Created book: #{book.name}"
+            warn "Dir: #{book.path}"
+          end
         end
       end
 
@@ -30,7 +38,32 @@ module RN
 
         def call(name: nil, **options)
           global = options[:global]
-          warn "TODO: Implementar borrado del cuaderno de notas con nombre '#{name}' (global=#{global}).\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          prompt = TTY::Prompt.new
+          
+          if global then
+            # confirm = STDIN.gets.chomp 
+            cancel = prompt.no?("This will delete all notes fron the global book, are you sure?")
+            unless cancel 
+              RN::Book.deleteRootNotes
+            else
+              prompt.error("Canceled")
+            end
+          elsif name
+            book = RN::Book.lookup(name)
+            if book
+              cancel = prompt.no?("This will delete all notes from book '#{book.name}', are you sure?")
+              unless cancel 
+                RN::Book.delete(name)
+                prompt.ok("Removed book '#{name}'.")
+              else
+                prompt.error("Canceled")
+              end
+            else
+              prompt.warn("Book '#{name}' does not exist!")
+            end
+          else
+            prompt.error("Delete called with no arguments or options")
+          end
         end
       end
 
@@ -42,7 +75,10 @@ module RN
         ]
 
         def call(*)
-          warn "TODO: Implementar listado de los cuadernos de notas.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          # warn "TODO: Implementar listado de los cuadernos de notas.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          books = RN::Book.getAllNames
+          puts "\nBooks:"
+          books.each_slice(5) { |row| puts row.map{|e| "%10s" % e}.join("  ") }
         end
       end
 
@@ -59,7 +95,8 @@ module RN
         ]
 
         def call(old_name:, new_name:, **)
-          warn "TODO: Implementar renombrado del cuaderno de notas con nombre '#{old_name}' para que pase a llamarse '#{new_name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          # warn "TODO: Implementar renombrado del cuaderno de notas con nombre '#{old_name}' para que pase a llamarse '#{new_name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          RN::Book.rename(old_name, new_name)
         end
       end
     end
