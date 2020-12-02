@@ -1,16 +1,10 @@
 # rn
 
-Plantilla para comenzar con el Trabajo Práctico Integrador de la cursada 2020 de la materia
-Taller de Tecnologías de Producción de Software - Opción Ruby, de la Facultad de Informática
-de la Universidad Nacional de La Plata.
+Proyecto para el Trabajo Práctico Integrador de la cursada 2020 de la materia
+Taller de Tecnologías de Producción de Software - Opción Ruby, de la Facultad de Informática de la Universidad Nacional de La Plata.
 
 Ruby Notes, o simplemente `rn`, es un gestor de notas concebido como un clon simplificado
 de la excelente herramienta [TomBoy](https://wiki.gnome.org/Apps/Tomboy).
-
-Este proyecto es simplemente una plantilla para comenzar a implementar la herramienta e
-intenta proveer un punto de partida para el desarrollo, simplificando el _bootstrap_ del
-proyecto que puede ser una tarea que consume mucho tiempo y conlleva la toma de algunas
-decisiones que pueden tener efectos tanto positivos como negativos en el proyecto.
 
 ## Uso de `rn`
 
@@ -43,29 +37,10 @@ $ export PATH="$(pwd)/bin:$PATH"
 $ rn [args]
 ```
 
-> Notá que para la ejecución de la herramienta, es necesario tener una versión reciente de
-> Ruby (2.5 o posterior) y tener instaladas sus dependencias, las cuales se manejan con
-> Bundler. Para más información sobre la instalación de las dependencias, consultar la
-> siguiente sección ("Desarrollo").
-
-Documentar el uso para usuarios finales de la herramienta queda fuera del alcance de esta
-plantilla y **se deja como una tarea para que realices en tu entrega**, pisando el contenido
-de este archivo `README.md` o bien en uno nuevo. Ese archivo deberá contener cualquier
-documentación necesaria para entender el funcionamiento y uso de la herramienta que hayas
-implementado, junto con cualquier decisión de diseño del modelo de datos que consideres
-necesario documentar.
 
 ## Desarrollo
 
-Esta sección provee algunos tips para el desarrollo de tu entrega a partir de esta
-plantilla.
-
 ### Instalación de dependencias
-
-Este proyecto utiliza Bundler para manejar sus dependencias. Si aún no sabés qué es eso
-o cómo usarlo, no te preocupes: ¡lo vamos a ver en breve en la materia! Mientras tanto,
-todo lo que necesitás saber es que Bundler se encarga de instalar las dependencias ("gemas")
-que tu proyecto tenga declaradas en su archivo `Gemfile` al ejecutar el siguiente comando:
 
 ```bash
 $ bundle install
@@ -84,10 +59,6 @@ cuando estés comenzando con la utilización del proyecto), podés comenzar a pr
 herramienta y a desarrollar tu entrega.
 
 ### Estructura de la plantilla
-
-El proyecto te provee una estructura inicial en la cual podés basarte para implementar tu
-entrega. Esta estructura no es necesariamente rígida, pero tené en cuenta que modificarla
-puede requerir algún trabajo adicional de tu parte.
 
 * `lib/`: directorio que contiene todas las clases del modelo y de soporte para la ejecución
   del programa `bin/rn`.
@@ -110,7 +81,7 @@ puede requerir algún trabajo adicional de tu parte.
 * `bin/`: directorio donde reside cualquier archivo ejecutable, siendo el más notorio `rn`
   que se utiliza como punto de entrada para el uso de la herramienta.
 
-  ### Notas de desarrollo
+  ### Notas de desarrollo Entrega 1
 
   * Armado de ejemplos en las mismas llamadas a los comandos
   * https://stackoverflow.com/questions/36350321/errnoenoent-no-such-file-or-directory-rb-sysopen
@@ -135,7 +106,38 @@ puede requerir algún trabajo adicional de tu parte.
       f.truncate(f.pos)
     }
     ```
-  * (Quizás) Agregar [logger](https://github.com/piotrmurach/tty-logger), [colores](), [prompt](https://github.com/piotrmurach/tty-prompt), [font?](https://github.com/piotrmurach/tty-font), [box](https://github.com/piotrmurach/tty-box)
+  * (Quizás) ~~Agregar [logger](https://github.com/piotrmurach/tty-logger), [colores](), [prompt](https://github.com/piotrmurach/tty-prompt), [font?](https://github.com/piotrmurach/tty-font), [box](https://github.com/piotrmurach/tty-box)~~
 
-  * Separar Modelo de Comandos
-  * Separar manejo de archivos de Modelo
+  * [x] Separar Modelo de Comandos 
+  *  [x] Separar manejo de archivos de Modelo
+
+### Notas de desarrollo Entrega 2
+  * Elegir formato de texto plano:
+    + [x] [Markdown](https://daringfireball.net/projects/markdown/syntax)
+    + [ ] [reStructuredText](https://docutils.sourceforge.io/docs/user/rst/quickref.html)
+    + [ ] [MediaWiki](https://www.mediawiki.org/wiki/MediaWiki_Language_Extension_Bundle)
+  * Elegir formato rico:
+    + [x] HTML
+    + [ ] PDF
+  * Para convertir de texto Markdown a HTML estuve probando dos liberias [redcarpet](https://github.com/vmg/redcarpet) y [github-markdown](https://github.com/github/markup). El problema que tenia este último es que necesita que llos archivos sean `.markdown` y tuve que hacer archivos temporales porque no queria modificar demasiado como se guardaban los archivos desde antes. Entonces a la hora de exportar un archivo se hace una copia a a una carpeta temporal con la estensión correspondiente para que pueda leerlo ese modulo. No me gustaba esta estrategia por eso termine decidiendome a último momento por **redcarpet** que además tiene mejor documentación y me fué mas sencillo de configurar.
+  * Un problema que tuve para agregar el comando `--export` fue que no sabía si ponerlo en la parte de notas, o en la parte de libros (`n` y `b` son los argumentos principales). El un principio pense ponerlo del lado de libro y que se use de la siguiente manera:
+    ```bash
+    rn b export --note unaNota --book unLibro  # para exportar las notas "unaNota" de "unLibro"
+    rn b export --global                       # para exportar las notas globales
+    rn b export --book unLibro                 # para exportar las notas de unLibro
+    rn b export                                # para exportar todas las notas
+    ```
+    El problema era que se usaba `--book` para indicar el libro con la intención de exporar todas las notas de ese libro se podia pisar con cuando se usa esa misma opción para indicar el libro al que perteneces una nota. Por ello decidi ponerlo bajo el comando de notas (aunque pensandolo ahora podría accederse de ambos "lados").
+    Asi:
+    ```bash
+    rn n export unaNota --book unLibro  # para exportar las notas "unaNota" de "unLibro"
+    rn n export --global                       # para exportar las notas globales
+    rn n export --book unLibro                 # para exportar las notas de unLibro
+    rn n export                                # para exportar todas las notas
+    ```
+    Por lo tanto cuando el argumento de la nota es nulo, se toma que se exportaran todas las notas de el libro indicado por la opción `--book`.
+    De todas maneras las notas no conoces a los libros y a las otras notas, por lo que el manejo interno igualmente lo hace la clase `Book`, que arma las colecciones pertinentes de notas, pidiendole los datos a la clase `Note`, para luego llamar a la nueva clase `Exporter` que con ayuda de la clase `FileManager` mueve y crea los nuevos archivos.
+  * Se ofrecen algunas opciones para facilitar el uso, aunque esto fue pensado con el optimismo de tener varios sistemas de marcado y varios formatos de salida, pero ya queda el cli por si en algún momento se imprementa. Para ello uso [TTY-prompt](https://github.com/piotrmurach/tty-prompt)
+
+  * Al HTML que genera *redcarpet* se le agregan unos simples tags para indicar el título y libro de la nota. Se intento embellecerlos con unas librerías sin éxito ([codeprettify](https://github.com/googlearchive/code-prettify#readme) parece que ya no anda mas, y [rouge](https://github.com/rouge-ruby/) ([tutorial](https://www.tom-meehan.com/posts/how-i-get-this-awesome-syntax-highlighting-using-redcarpet-and-rouge)) parece que hay que usarlo con *rails*, asi que para más adelante).
+  * Para intentar la conversión a PDF se estuvo leyendo [esto](https://github.com/walle/gimli), [esto](http://www.rubyinside.com/prawn-ruby-pdf-library-987.html) y [esto](https://wkhtmltopdf.org/)
