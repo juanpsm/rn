@@ -26,6 +26,7 @@ module RN
     end
 
     def self.lookup(title, bookname)
+      # p "note in look", 
       note = self.new(title, bookname)
       if note.exists?
         return note
@@ -75,5 +76,14 @@ module RN
       "<Note Title: '#{@title}' Book: '#{@bookname}'>"
     end
 
+    def self.exportNote(note, bookname)
+      # hay que arreglar esto de buscar las notas, chamuya un poco cuando no encuentra el libro, sale parche
+      if note && self.lookup(note.title, note.bookname) && bookname == note.bookname
+        puts "Calling exporter for#{" global" unless note.bookname} note '#{note.title}'#{" from book '#{note.bookname}'" if note.bookname}."
+        Exporter.export([note])
+        return true
+      end
+      return false
+    end
   end
 end

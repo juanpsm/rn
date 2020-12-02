@@ -1,6 +1,7 @@
 module RN
   class FileManager
     ROOT_FOLDER_NAME = ".my_rns"
+    EXPORT_FOLDER_NAME = ".exports"
 
     def self.homeFolder
       Dir.home
@@ -14,8 +15,71 @@ module RN
       File.directory?(rootFolderPath())
     end
 
+    def self.rootFolder
+      createRootFolder() unless rootFolder?()
+      return rootFolderPath()
+    end
+
     def self.createRootFolder
-        FileUtils.mkdir_p(rootFolderPath()) unless rootFolder?()
+      FileUtils.mkdir_p(rootFolderPath()) unless rootFolder?()
+    end
+
+    def self.exportFolderPath
+      File.absolute_path("#{rootFolderPath()}/#{EXPORT_FOLDER_NAME}")
+    end
+
+    def self.exportFolder?
+      File.directory?(exportFolderPath())
+    end
+
+    def self.exportFolder
+      createExportFolder() unless exportFolder?()
+      return exportFolderPath()
+    end
+
+    def self.createExportFolder
+      FileUtils.mkdir_p(exportFolderPath()) unless exportFolder?()
+    end
+
+    def self.tmpFolderPath
+      File.absolute_path("#{exportFolderPath()}/.tmp")
+    end
+
+    def self.tmpFolder?
+      File.directory?(tmpFolderPath())
+    end
+
+    def self.tmpFolder
+      createTmpFolder() unless tmpFolder?()
+      return tmpFolderPath()
+    end
+
+    def self.createTmpFolder
+      FileUtils.mkdir_p(tmpFolderPath()) unless tmpFolder?()
+    end
+
+    def self.createTmp(filepath)
+      createTmpFolder() unless tmpFolder?()
+      dest = "#{File.absolute_path("#{tmpFolder()}/#{File.basename(filepath,'.*')}.markdown")}"
+      FileUtils.cp filepath, dest
+      return dest
+    end
+
+    def self.deleteTmp
+      if tmpFolder?()
+        puts "removed #{tmpFolder()}"
+        FileUtils.rm_rf(tmpFolder())
+      end
+    end
+
+    def self.createHTML(filepath, content)
+      createExportFolder() unless exportFolder?()
+      FileUtils.mkdir_p(File.dirname(filepath))
+      out_file = File.new(filepath, "w")
+      out_file.puts(content)
+      out_file.close
+      puts "Created file #{filepath}"
+      return filepath
     end
 
     def self.folderPath(name)
@@ -84,7 +148,7 @@ module RN
       self.rootNotesPaths.each.collect{|route| File.basename(route, ".*")}
     end
 
-    def self.getNotesFromFolder(name)
+    def self.getFilenamesFromFolder(name)
       Dir["#{self.folderPath(name)}/*"].reject{|file| File.directory?(file)}.each.collect{|route| File.basename(route, ".*")}
     end
 

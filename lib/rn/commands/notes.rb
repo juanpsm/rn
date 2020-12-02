@@ -118,16 +118,16 @@ module RN
 
           notes = []
           if book
-            notes << RN::Book.getNotes(book)
+            notes << RN::Book.getNoteNames(book)
           end
           if global
-            notes << RN::Book.rootNotes
+            notes << RN::Book.rootNoteNames
           end
           unless global || book
-            notes << RN::Book.rootNotes
+            notes << RN::Book.rootNoteNames
             RN::Book.getAllNames.each do
               |each|
-              notes << RN::Book.getNotes(each)
+              notes << RN::Book.getNoteNames(each)
             end
           end
           puts "#{"\nAll " unless global || book}Notes#{" from book #{book ? ("'#{book}'#{" & global" if global}") : "global"}" if global || book}:\n"
@@ -157,6 +157,46 @@ module RN
           else
             RN::Note.show(note)
             warn "Viewed note '#{title}'#{" from book '#{book}'" if book}."
+          end
+        end
+      end
+
+      class Export < Dry::CLI::Command
+        desc 'Export notes in rich-format'
+
+        argument :title, required: false, desc: 'Title of the note'
+        option :book, type: :string, desc: 'Name of the book'
+        option :global, type: :boolean, default: false, desc: 'Exports only notes from the global book'
+
+        example [
+          '                            # Exports notes from all books (including the global book)',
+          '--global                    # Exports notes from the global book',
+          '--book "My book"            # Exports notes from the book named "My book"',
+          '--book Memoires             # Exports notes from the book named "Memoires"',
+          '"New note" --book "My book" # Exports a note titled "New note" from the book "My book"',
+          'thoughts --book Memoires    # Exports a note titled "thoughts" from the book "Memoires"'
+        ]
+
+        def call(title: nil, **options)
+          book = options[:book]
+          global = options[:global]
+
+          if title
+            note = RN::Note.lookup(title, book)
+            # p "note in comm", note
+            if RN::Note.exportNote(note, book)
+              return
+            else
+              warn "The note '#{title}' does not exists (at least in#{book ? " book '#{book}'" : " the global book"})."
+            end
+          else
+            if book
+              RN::Book.exportNotes(book)
+            elsif global
+              RN::Book.exportRootNotes
+            else 
+              RN::Book.exportAllNotes
+            end
           end
         end
       end

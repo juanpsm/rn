@@ -5,6 +5,7 @@ module RN
   autoload :Book, 'rn/model/book'
   autoload :FileManager, 'rn/helpers/file_manager'
   autoload :Editor, 'rn/helpers/editor'
+  autoload :Exporter, 'rn/helpers/exporter'
 
   # Agregar aquí cualquier autoload que sea necesario para que se cargue las clases y
   # módulos del modelo de datos.

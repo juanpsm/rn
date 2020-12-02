@@ -4,8 +4,10 @@ GEM
     concurrent-ruby (1.1.7)
     dry-cli (0.6.0)
       concurrent-ruby (~> 1.0)
+    github-markup (3.0.5)
     pastel (0.8.0)
       tty-color (~> 0.5)
+    redcarpet (3.5.0)
     tty-color (0.5.2)
     tty-cursor (0.7.1)
     tty-editor (0.6.0)
@@ -26,6 +28,8 @@ PLATFORMS
 
 DEPENDENCIES
   dry-cli (~> 0.6)
+  github-markup (~> 3.0.5)
+  redcarpet (~> 3.5.0)
   tty-editor (~> 0.6.0)
 
 RUBY VERSION

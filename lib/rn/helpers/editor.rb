@@ -33,7 +33,7 @@ module RN
         print "\nWrite the contents of the note below.\nYou can write multiple lines.\nEnd the note with '#{eof}' + [Enter].\n\n#{prompt}"
         content = ""
         input_line = STDIN.gets
-          while input_line.chomp != eof
+          while input_line && input_line.chomp != eof
             content << input_line
             print "#{prompt}"
             input_line = STDIN.gets

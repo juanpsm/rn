@@ -54,16 +54,50 @@ module RN
       FileManager.rootNotesPaths
     end
 
-    def self.rootNotes
+    def self.rootNoteNames
       FileManager.rootNotesNames
     end
 
+    def self.getNoteNames(name)
+      FileManager.getFilenamesFromFolder(name)
+    end
+
     def self.getNotes(name)
-      FileManager.getNotesFromFolder(name)
+      notes = getNoteNames(name).collect do
+        |notename|
+        Note.lookup(notename, name)
+      end
+      return notes
+    end
+
+    def self.getRootNotes()
+      getNotes(nil)
     end
 
     def to_s
       "<Book Name: '#{@name}' Path: '#{@path}'>"
+    end
+
+    def self.exportNotes(name)
+      puts "Calling exporter for notes in book #{name}"
+      Exporter.export(getNotes(name))
+    end
+
+    def self.exportRootNotes
+      puts "Calling exporter for notes in global book"
+      Exporter.export(getRootNotes())
+    end
+
+    def self.exportAllNotes
+      puts "Calling exporter for all notes"
+      notes = []
+      getAllNames().each {
+        |book|
+        notes << getNotes(book)
+      }
+      notes << getRootNotes()
+      notes.flatten!
+      Exporter.export(notes)
     end
   end
 end
