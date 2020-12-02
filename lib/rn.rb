@@ -6,6 +6,7 @@ module RN
   autoload :FileManager, 'rn/helpers/file_manager'
   autoload :Editor, 'rn/helpers/editor'
   autoload :Exporter, 'rn/helpers/exporter'
+  autoload :RougeeHelper, 'rn/helpers/rougee_helper'
 
   # Agregar aquí cualquier autoload que sea necesario para que se cargue las clases y
   # módulos del modelo de datos.

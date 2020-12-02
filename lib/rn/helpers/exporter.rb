@@ -14,7 +14,7 @@ module RN
         menu.default 1
 
         menu.choice "HTML", 1
-        menu.choice "PDF", 2
+        menu.choice "PDF", 2, disabled: "(not yet)"
         menu.choice "LaTeX", 3, disabled: "(in some distant future)"
         menu.choice "Cancel", :cancel
       end
@@ -94,6 +94,7 @@ module RN
         # temp = FileManager.createTmp(filepath)
         # return GitHub::Markup.render(filepath, File.read(temp))
         return processor().render(File.read(filepath))
+        #return RN::RougeeHelper.rouge_markdown(File.read(filepath))
     end
 
     private_class_method :export_to_format
