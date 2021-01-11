@@ -7,7 +7,7 @@ GEM
     github-markup (3.0.5)
     pastel (0.8.0)
       tty-color (~> 0.5)
-    redcarpet (3.5.0)
+    redcarpet (3.5.1)
     rouge (3.25.0)
     tty-color (0.5.2)
     tty-cursor (0.7.1)
@@ -30,7 +30,7 @@ PLATFORMS
 DEPENDENCIES
   dry-cli (~> 0.6)
   github-markup (~> 3.0.5)
-  redcarpet (~> 3.5.0)
+  redcarpet (~> 3.5.1)
   rouge
   tty-editor (~> 0.6.0)
 

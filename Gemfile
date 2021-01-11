@@ -8,6 +8,6 @@ gem "tty-editor", "~> 0.6.0"
 
 gem "github-markup", "~> 3.0.5"
 
-gem "redcarpet", "~> 3.5.0"
+gem "redcarpet", "~> 3.5.1"
 
 gem "rouge"
