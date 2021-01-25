@@ -57,7 +57,7 @@ module RN
         savefolder = prompt.ask("Output Folder?", default: "#{FileManager.exportFolder()}/")
         notes.each do
           |note|
-          p savefile = File.join("#{savefolder}", "#{note.title}.#{format.downcase}")
+          savefile = File.join("#{savefolder}", "#{note.title}.#{format.downcase}")
           marked_string = add_meta(note)
           FileManager.createHTML(savefile, marked_string)
         end
