@@ -1,14 +1,26 @@
-<p id="notice"><%= notice %></p>
+<div class="small-container center-block">
+  <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Title:</strong>
-  <%= @note.title %>
-</p>
+  <h1>
+    <strong>Title:</strong>
+    <%= @note.title %>
+  </h1>
+  <h6 class="text-secondary">
+    <em>from book:</em>
+    <%= @note.book.name %>
+  </h6>
+  <p class="small text-secondary"> 
+    created: <%= @note.created_at %>
+    <% if @note.updated_at%>
+      | updated: <%= @note.updated_at %>
+    <% end %>
+  </p>
+  
+  <div class="padding">
+    <%=@note.content %>
+  </div>
 
-<p>
-  <strong>Book:</strong>
-  <%= @note.book_id %>
-</p>
-
-<%= link_to 'Edit', edit_note_path(@note) %> |
-<%= link_to 'Back', notes_path %>
+  <%= link_to 'Edit', edit_note_path(@note), class:"btn btn-sm btn-outline-warning" %>
+  <%= link_to 'Delete', @note, method: :delete, data: { confirm: 'Are you sure?' }, class:"btn btn-sm btn-outline-danger" %> |
+  <%= link_to 'Back', notes_path, class:"btn btn-sm btn-outline-secondary" %>
+</div>
