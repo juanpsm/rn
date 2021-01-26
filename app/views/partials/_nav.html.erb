@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" href="#">RN</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -15,23 +15,24 @@
     </ul>
     <!-- Right bar-->
     <ul class="navbar-nav">
-      <li class="nav-item dropdown">
+      <%if user_signed_in?%>
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Hi, user!
+            Hi, <%= current_user.email %>!
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="#">Action</a>
             <a class="dropdown-item" href="#">Another action</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
+            <%=link_to "Logout", destroy_user_session_path, method: :delete, class:"dropdown-item" %>
           </div>
         </li>
+      <% else %>
+        <%= link_to "Login", new_user_session_path, class:"btn btn-outline-primary" %>
+        <div style="padding-left: 10px;">
+          <%= link_to "Sign Up", new_user_registration_path, class:"btn btn-outline-success" %>
+        </div>
+      <%end%>
     </ul>
-    <form class="form-inline">
-      <button class="btn btn-outline-primary" type="button">Main button</button>
-      <div style="padding-left: 10px;">
-        <button class="btn btn-outline-success" type="button">Second button</button>
-      </div>
-    </form>
   </div>
 </nav>
