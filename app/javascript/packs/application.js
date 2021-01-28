@@ -8,7 +8,13 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import 'bootstrap'
-import 'css/styles'
+// import 'css/styles' // delete? 
+import '../stylesheets/application';
+import "@fortawesome/fontawesome-free/js/all";
+
+document.addEventListener("turbolinks:load", () => {
+  $('[data-toggle="tooltip"]').tooltip()
+});
 
 Rails.start()
 Turbolinks.start()
@@ -16,3 +22,4 @@ ActiveStorage.start()
 
 require("trix")
 require("@rails/actiontext")
+require('admin-lte');
