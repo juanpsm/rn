@@ -22,6 +22,7 @@ class BooksController < ApplicationController
   # POST /books or /books.json
   def create
     @book = current_user.books.create(book_params)
+    @book.is_default = false
 
     respond_to do |format|
       if @book.save
@@ -54,6 +55,10 @@ class BooksController < ApplicationController
       format.html { redirect_to books_url, notice: "Book was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+  #Note, the rescue block is outside the destroy method
+  rescue_from 'Book::Error' do |exception|
+    redirect_to books_path, alert: exception.message
   end
 
   private
