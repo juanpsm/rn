@@ -1,29 +1,34 @@
-<p id="notice"><%= notice %></p>
+<div class="large-container center-block">
+  <!--p id="notice"><%= notice %></p-->
 
-<h1>Notes</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Book</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @notes.each do |note| %>
+  <h1>Notes <%= link_to '+', new_note_path, class:"badge badge-pill badge-success" %></h1>
+  <div class="row">
+  <%= render @notes %>
+  </div>
+  <!--hr>
+  <table>
+    <thead>
       <tr>
-        <td><%= note.title %></td>
-        <td><%= note.book_id %></td>
-        <td><%= link_to 'Show', note %></td>
-        <td><%= link_to 'Edit', edit_note_path(note) %></td>
-        <td><%= link_to 'Destroy', note, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <th>Title</th>
+        <th>Book</th>
+        <th colspan="3"></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
-<br>
+    <tbody>
+      <% @notes.each do |note| %>
+        <tr>
+          <td><%= note.title %></td>
+          <td><%= note.book_id %></td>
+          <td><%= link_to 'Show', note %></td>
+          <td><%= link_to 'Edit', edit_note_path(note) %></td>
+          <td><%= link_to 'Destroy', note, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
-<%= link_to 'New Note', new_note_path %>
+  <br>
+
+  <%= link_to 'New Note', new_note_path, class:"btn btn-sm btn-outline-success" %-->
+</div>

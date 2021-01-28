@@ -1,6 +1,13 @@
 <div class="small-container center-block">
   <p id="notice"><%= notice %></p>
 
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="#"><%= @note.book.name %></a></li>
+      <li class="breadcrumb-item active" aria-current="page"><%= @note.title %></li>
+    </ol>
+  </nav>
+
   <h1>
     <strong>Title:</strong>
     <%= @note.title %>

@@ -1,14 +1,18 @@
-<p id="notice"><%= notice %></p>
+<div class="small-container center-block">
 
-<p>
-  <strong>Name:</strong>
-  <%= @book.name %>
-</p>
+  <p>
+    <strong>Name:</strong>
+    <%= @book.name %>
+  </p>
 
-<p>
-  <strong>User:</strong>
-  <%= @book.user_id %>
-</p>
+  <p>
+    <%= @book.notes.size %> notes
+  </p>
 
-<%= link_to 'Edit', edit_book_path(@book) %> |
-<%= link_to 'Back', books_path %>
+  <%= link_to 'Edit', edit_book_path(@book) %> |
+  <%= link_to 'Back', books_path %>
+
+  <div class="row">
+    <%= render @book.notes %>
+  </div>
+</div>

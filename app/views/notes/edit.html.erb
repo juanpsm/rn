@@ -1,6 +1,8 @@
-<h1>Editing Note</h1>
+<div class="small-container center-block">
+  <h1>Editing Note <%= @note.id %></h1>
 
-<%= render 'form', note: @note %>
+  <%= render 'form', note: @note %>
 
-<%= link_to 'Show', @note %> |
-<%= link_to 'Back', notes_path %>
+  <%= link_to 'Show', @note %> |
+  <%= link_to 'Back', notes_path %>
+</div>
