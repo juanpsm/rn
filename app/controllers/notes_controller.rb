@@ -4,6 +4,8 @@ class NotesController < ApplicationController
   # GET /notes or /notes.json
   def index
     @notes = Note.all
+    # users can only see their notes
+    @notes = current_user.notes
   end
 
   # GET /notes/1 or /notes/1.json
@@ -18,6 +20,7 @@ class NotesController < ApplicationController
 
   # GET /notes/1/edit
   def edit
+    @books = current_user.books
   end
 
   # POST /notes or /notes.json

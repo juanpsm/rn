@@ -8,82 +8,79 @@
 
   <!-- Sidebar -->
   <div class="sidebar">
-    <!-- Sidebar user panel (optional) -->
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="image">
-        <%= image_tag "user2-160x160.jpg", class:"img-circle elevation-2", alt:"User Image" %>
+    <%if user_signed_in?%>
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <%= image_tag "user2-160x160.jpg", class:"img-circle elevation-2", alt:"User Image" %>
+        </div>
+        <div class="info">
+          <a href="#" class="d-block"><%= current_user.email %></a>
+        </div>
       </div>
-      <div class="info">
-        <%if user_signed_in?%>
-        <a href="#" class="d-block"><%= current_user.email %></a>
-        <%end%>
-      </div>
-    </div>
 
-    <!-- Sidebar Menu -->
-    <nav class="mt-2">
-      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-        <!-- Add icons to the links using the .nav-icon class
-              with font-awesome or any other icon font library -->
-        <li class="nav-item">
-          <%= link_to(new_note_path, class:"nav-link bg-lime") do %>
-            <i class="nav-icon fas fa-plus"></i>
-            <p>
-              New Note
-            </p>
-          <%end%>
-        </li>
-        <li class="nav-item">
-          <%= link_to(notes_path, class:"nav-link") do %>
-            <i class="nav-icon fas fa-file-alt"></i>
-            <p>
-              All Notes
-            </p>
-          <%end%>
-        </li>
-        <li class="nav-item has-treeview">
-          <a href="#" class="nav-link">
-            <i class="nav-icon fas fa-book"></i>
-            <p>
-              Notebooks
-              <i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="fas fa-book-open nav-icon"></i>
-                <p>book1</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>books</p>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link">
-            <i class="nav-icon fas fa-trash-alt"></i>
-            <p>
-              Trash
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link">
-            <i class="nav-icon fas fa-file-alt"></i>
-            <p>
-              All Notes
-              <span class="right badge badge-danger">New</span>
-            </p>
-          </a>
-        </li>
-      </ul>
-    </nav>
-    <!-- /.sidebar-menu -->
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+                with font-awesome or any other icon font library -->
+          <li class="nav-item">
+            <%= link_to(new_note_path, class:"nav-link bg-lime") do %>
+              <i class="nav-icon fas fa-plus"></i>
+              <p>
+                New Note
+              </p>
+            <%end%>
+          </li>
+          <li class="nav-item">
+            <%= link_to(notes_path, class:"nav-link") do %>
+              <i class="nav-icon fas fa-file-alt"></i>
+              <p>
+                All Notes
+                <span class="right badge badge-danger"><%= current_user.notes.count %></span>
+              </p>
+            <%end%>
+          </li>
+          <li class="nav-item has-treeview">
+            <%= link_to(books_path, class:"nav-link") do %>
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Books
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            <%end%>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <%= link_to(books_path, class:"nav-link") do %>
+                  <i class="nav-icon fas fa-book"></i>
+                  <p>
+                    All Books
+                    <span class="right badge badge-danger"><%= current_user.books.count %></span>
+                  </p>
+                <%end%>
+              </li>
+              <% current_user.books.each do |book| %>
+                <li class="nav-item">
+                  <%= link_to(book, class:"nav-link") do %>
+                    <i class="fas fa-book-open nav-icon"></i>
+                    <p><%= book.name %></p>
+                  <%end%>
+                </li>
+              <%end%>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-trash-alt"></i>
+              <p>
+                Trash
+              </p>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    <%end%> <!-- /.if user_signed_in? -->
   </div>
   <!-- /.sidebar -->
 </aside>

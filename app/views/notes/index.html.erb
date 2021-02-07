@@ -1,9 +1,13 @@
 <div class="large-container center-block">
   <!--p id="notice"><%= notice %></p-->
 
-  <h1>Notes <%= link_to '+', new_note_path, class:"badge badge-pill badge-success" %></h1>
+  <h1>Notes <!--%= link_to '+', new_note_path, class:"badge badge-pill badge-success" %--></h1>
   <div class="row">
-  <%= render @notes %>
+    <% unless @notes.blank? %>
+      <%= render @notes %>
+    <%else%>
+      There is nothing here yet.
+    <%end%>
   </div>
   <!--hr>
   <table>
