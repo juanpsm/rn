@@ -2,12 +2,13 @@
 
   <h1>Books</h1>
 
-  <table>
+  <table class="table table-bordered">
     <thead>
       <tr>
         <th>Name</th>
-        <th>Notes</th>
-        <th>prot.</th>
+        <th># Notes</th>
+        <th>Created</th>
+        <th>Updated</th>
         <th colspan="3"></th>
       </tr>
     </thead>
@@ -17,10 +18,19 @@
         <tr>
           <td><%= book.name %></td>
           <td><%= book.notes.size %></td>
-          <td><%= book.is_default %></td>
-          <td><%= link_to 'Show', book %></td>
-          <td><%= link_to 'Edit', edit_book_path(book) %></td>
-          <td><%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td><%= book.created_at %></td>
+          <td><%= book.updated_at %></td>
+          <td>
+            <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu">
+              <%= link_to 'Show', book, class:"dropdown-item" %>
+              <%= link_to 'Edit', edit_book_path(book), class:"dropdown-item" %>
+              <div class="dropdown-divider"></div>
+              <%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %>
+            </div>
+          </td>
         </tr>
       <% end %>
     </tbody>
