@@ -1,7 +1,7 @@
 class Book < ApplicationRecord
   belongs_to :user
   has_many :notes
-
+  validates :name, presence: true
   after_destroy :ensure_default_book_remains
 
   class Error < StandardError
