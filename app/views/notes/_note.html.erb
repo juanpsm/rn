@@ -57,11 +57,7 @@
       <div class="card-body">
         <!-- h6 class="card-subtitle mb-2 text-muted">from book <%= link_to(note.book) do %><strong><%= note.book.name %></strong><% end %></h6-->
         <p class="small text-secondary margin-top">
-          <% if note.content.to_plain_text.size > 20 %>
-            <%= note.content.to_plain_text.truncate(20) %>
-          <%else%>
-            <%= note.content %>
-          <%end%>
+          <%= note.content.to_plain_text.truncate(20) %>
         </p>
       </div>
       <!-- /.card-body -->
