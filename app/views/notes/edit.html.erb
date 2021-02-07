@@ -1,8 +1,23 @@
-<div class="small-container center-block">
-  <h1>Editing Note <%= @note.id %></h1>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Editing Note <%= @note.id %></h1>
+      </div><!-- /.col -->
+      <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">Home</li>
+            <li class="breadcrumb-item"><%= link_to 'notes', notes_path %></li>
+            <li class="breadcrumb-item active">new</li>
+          </ol>
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div>
 
-  <%= render 'form', note: @note %>
-
-  <%= link_to 'Show', @note %> |
-  <%= link_to 'Back', notes_path %>
+<div class="content container-fluid">
+  <div class="container-fluid">
+    <%= render 'form', note: @note %>
+    <%= link_to 'Cancel', notes_path, class:"btn btn-sm btn-outline-secondary" %>
+  </div>
 </div>

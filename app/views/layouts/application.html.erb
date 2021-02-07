@@ -17,40 +17,17 @@
       <%= render "base/sidebar" %>
 
       <div class="content-wrapper">
-        <div class="content-header">
-          <div class="container-fluid">
-            <div class="row mb-2">
-              <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Starter Page</h1>
-              </div><!-- /.col -->
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active">Starter Page</li>
-                </ol>
-              </div><!-- /.col -->
-            </div><!-- /.row -->
-          </div><!-- /.container-fluid -->
-        </div>
-
-        <div class="content container-fluid">
-          <div class="container-fluid">
-            <%= render "partials/nav" %>
-
-            <%if notice %>
-              <p class="alert alert-info"><%= notice %></p>
-            <%end%>
-            <%if alert %>
-              <p class="alert alert-danger"><%= alert %></p>
-            <%end%>
-
-            <%= yield %>
-          </div>
-        </div>
+        <%if notice %>
+          <p class="alert alert-info"><%= notice %></p>
+        <%end%>
+        <%if alert %>
+          <p class="alert alert-danger"><%= alert %></p>
+        <%end%>
+        
+        <%= yield %>
       </div>
 
       <%= render "base/footer" %>
-      <%= render "base/control_sidebar" %>
     <div>
   </body>
 </html>

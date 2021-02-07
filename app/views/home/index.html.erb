@@ -1,2 +1,66 @@
-<h1>Welcome to rn</h1>
-<p><pre>Insert fancy menu</pre></p>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Welcome to rn!</h1>
+      </div><!-- /.col -->
+      <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item active" active>Home</li>
+          </ol>
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div>
+
+<div class="content container-fluid">
+  <div class="container-fluid">
+    <div class="row d-flex justify-content-center text-center">
+      <% if user_signed_in? %>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 m-2">
+          <%= link_to(books_path, class:"btn btn-lg btn-dark") do %>
+            <i class="fa-3x fas fa-book"></i>
+            <h6 class="mt-2">Books</h6>
+          <%end%>
+        </div>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 m-2">
+          <%= link_to(new_book_path, class:"btn btn-lg bg-lime") do %>
+            <i class="fa-3x fas fa-book-medical"></i>
+            <h6 class="mt-2">Add Book</h6>
+          <%end%>
+        </div>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 m-2">
+          <%= link_to(notes_path, class:"btn btn-lg btn-dark") do %>
+            <i class="fa-3x fas fa-file-alt"></i>
+            <h6 class="mt-2">Notes</h6>
+          <%end%>
+        </div>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 m-2">
+          <%= link_to(new_note_path, class:"btn btn-lg bg-lime") do %>
+            <i class="fa-3x fas fa-file-medical"></i>
+            <h6 class="mt-2">Add Note</h6>
+          <%end%>
+        </div>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 m-2">
+          <%= link_to(notes_path, class:"btn btn-lg btn-primary") do %>
+            <i class="fa-3x fas fa-file-download"></i>
+            <h6 class="mt-2">Export All</h6>
+          <%end%>
+        </div>
+      <%else%>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 m-2">
+          <%= link_to(new_user_session_path, class:"btn btn-lg btn-primary") do %>
+            <i class="fa-3x fas fa-sign-in-alt"></i>
+            <h6 class="mt-2">Login</h6>
+          <%end%>
+        </div>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 m-2">
+          <%= link_to(new_user_registration_path, class:"btn btn-lg bg-lime") do %>
+            <i class="fa-3x fas fa-user-plus"></i>
+            <h6 class="mt-2">Sign up</h6>
+          <%end%>
+        </div>
+      <%end%>
+    </div>
+  </div>
+</div>

@@ -1,18 +1,50 @@
-<div class="small-container center-block">
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark"><%= @book.name %></h1>
+      </div><!-- /.col -->
+      <div class="col-sm-6">
+        <% if request.format.html? %>
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <%= link_to(books_path) do %>
+                books
+              <%end%>
+            </li>
+            <li class="breadcrumb-item active"><%= @book.name %></li>
+          </ol>
+        <%end%>
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div>
 
-  <p>
-    <strong>Name:</strong>
-    <%= @book.name %>
-  </p>
-
-  <p>
-    <%= @book.notes.size %> notes
-  </p>
-
-  <%= link_to 'Edit', edit_book_path(@book) %> |
-  <%= link_to 'Back', books_path %>
-
-  <div class="row">
-    <%= render @book.notes %>
+<div class="content container-fluid">
+  <div class="container-fluid">
+    <div class="text-right">
+      <%= link_to(edit_book_path(@book), class:"btn btn-sm btn-outline-warning",
+          title: 'Edit book', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
+        <i class="fas fa-pencil-alt"></i>
+      <%end%>
+      <%= link_to(note_path, method: :delete,
+          data: { confirm: 'Are you sure? This will delete all notes from this book and cannot be undone!' },
+          class:"btn btn-sm btn-outline-danger",
+          title: 'Delete book', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
+        <i class="far fa-trash-alt"></i>
+      <%end%>
+      |
+      <%= link_to 'Back', books_path, class:"btn btn-sm btn-outline-secondary" %>
+    </div>
+    <p>
+      <%= @book.notes.size %> notes
+    </p>
+    <div class="row">
+      <% unless @book.notes.blank? %>
+        <%= render @book.notes %>
+      <%else%>
+        There is nothing here yet.
+      <%end%>
+    </div>
   </div>
 </div>

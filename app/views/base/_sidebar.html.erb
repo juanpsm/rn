@@ -18,12 +18,14 @@
           <a href="#" class="d-block"><%= current_user.email %></a>
         </div>
       </div>
+    <%end%> <!-- /.if user_signed_in? -->
 
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-                with font-awesome or any other icon font library -->
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class
+              with font-awesome or any other icon font library -->
+        <%if user_signed_in?%>
           <li class="nav-item">
             <%= link_to(new_note_path, class:"nav-link bg-lime") do %>
               <i class="nav-icon fas fa-plus"></i>
@@ -42,6 +44,7 @@
             <%end%>
           </li>
           <li class="nav-item has-treeview">
+            <!--sacar link no hace nada-->
             <%= link_to(books_path, class:"nav-link") do %>
               <i class="nav-icon fas fa-book"></i>
               <p>
@@ -50,6 +53,14 @@
               </p>
             <%end%>
             <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <%= link_to(new_book_path, class:"nav-link bg-lime") do %>
+                  <i class="nav-icon fas fa-book-medical"></i>
+                  <p>
+                    New Book
+                  </p>
+                <%end%>
+              </li>
               <li class="nav-item">
                 <%= link_to(books_path, class:"nav-link") do %>
                   <i class="nav-icon fas fa-book"></i>
@@ -69,18 +80,21 @@
               <%end%>
             </ul>
           </li>
+        <%else%> <!-- /.if user_signed_in? -->
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-trash-alt"></i>
-              <p>
-                Trash
-              </p>
-            </a>
+            <%= link_to(new_user_session_path, class:"btn btn-block bg-primary") do %>
+              <i class="nav-icon fas fa-sign-in-alt"></i> Login
+            <%end%>
           </li>
-        </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
-    <%end%> <!-- /.if user_signed_in? -->
+          <li class="nav-item mt-2">
+            <%= link_to(new_user_registration_path, class:"btn btn-block bg-lime") do %>
+              <i class="nav-icon fas fa-user-plus"></i> Sign Up
+            <%end%>
+          </li>
+        <%end%> <!-- /.if user_signed_in? -->
+      </ul>
+    </nav>
+    <!-- /.sidebar-menu -->
   </div>
   <!-- /.sidebar -->
 </aside>

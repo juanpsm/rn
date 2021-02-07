@@ -1,4 +1,31 @@
-<div class="large-container center-block">
-  <h3>Notes from <%= @book.name %></h3>
-  <%= render @book.notes %>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Notes from <%= @book.name %></h1>
+      </div><!-- /.col -->
+      <div class="col-sm-6">
+        <div class="float-sm-right">
+          <%= link_to(new_note_path, class:"btn bg-lime") do %>
+            <i class="fas fa-plus"></i> add
+          <%end%>
+          <%= link_to(notes_download_path, class:"btn bg-primary", title:"Download ALL your notes") do %>
+            <i class="fas fa-download"></i>
+          <%end%>
+        </div><!-- /.float -->
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div>
+
+<div class="content container-fluid">
+  <div class="container-fluid">
+    <div class="row">
+      <% unless @book.notes.blank? %>
+        <%= render @book.notes %>
+      <%else%>
+        There is nothing here yet.
+      <%end%>
+    </div>
+  </div>
 </div>

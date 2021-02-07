@@ -8,7 +8,7 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import 'bootstrap';
-// import 'css/styles' // delete? 
+import 'css/styles' // delete? 
 import '../stylesheets/application';
 import "@fortawesome/fontawesome-free/js/all";
 
