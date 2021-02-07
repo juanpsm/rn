@@ -1,6 +1,7 @@
 class NotesController < ApplicationController
   before_action :set_note, only: %i[ show edit update destroy download]
   before_action :set_books, only: %i[ new create edit update ]
+  before_action :authenticate_user!
 
   # GET /notes or /notes.json
   def index
@@ -101,7 +102,7 @@ class NotesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_note
-      @note = Note.find(params[:id])
+      @note = current_user.notes.find(params[:id])
     end
 
     def set_books
@@ -111,5 +112,9 @@ class NotesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def note_params
       params.require(:note).permit(:title, :book_id, :content)
+    end
+
+    rescue_from ActiveRecord::RecordNotFound do |exception|
+      redirect_to root_path, alert: 'Record not found'
     end
 end

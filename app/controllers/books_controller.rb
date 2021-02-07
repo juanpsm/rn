@@ -1,5 +1,6 @@
 class BooksController < ApplicationController
   before_action :set_book, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
 
   # GET /books or /books.json
   def index
@@ -66,10 +67,19 @@ class BooksController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_book
       @book = Book.find(params[:id])
+      restrict_access if @book.user_id != current_user.id
+    end
+
+    def restrict_access
+      redirect_to root_path, :alert => "Access denied"
     end
 
     # Only allow a list of trusted parameters through.
     def book_params
       params.require(:book).permit(:name)
+    end
+
+    rescue_from ActiveRecord::RecordNotFound do |exception|
+      redirect_to root_path, status:404
     end
 end
