@@ -1,16 +1,29 @@
 class NotesController < ApplicationController
-  before_action :set_note, only: %i[ show edit update destroy ]
+  before_action :set_note, only: %i[ show edit update destroy download]
   before_action :set_books, only: %i[ new create edit update ]
 
   # GET /notes or /notes.json
   def index
-    @notes = Note.all
+    # @notes = Note.all
     # users can only see their notes
     @notes = current_user.notes
   end
 
   # GET /notes/1 or /notes/1.json
   def show
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: "#{@note.title}",
+        page_size: 'A4',
+        template: "notes/show.html.erb",
+        layout: "pdf.html",
+        orientation: "Landscape",
+        lowquality: true,
+        zoom: 1,
+        dpi: 75
+      end
+    end
   end
 
   # GET /notes/new
@@ -57,6 +70,32 @@ class NotesController < ApplicationController
       format.html { redirect_to notes_url, notice: "Note was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def download
+    html = render_to_string(:action => :show, :layout => "pdf.html") 
+    pdf = WickedPdf.new.pdf_from_string(html) 
+  
+    send_data(pdf, 
+      :filename => "#{@note.title}.pdf", 
+      :disposition => 'attachment') 
+  end
+
+  def download_all
+    @notes = current_user.notes
+    html = ""
+    @notes.each do |note|
+      @note = Note.find(note.id)
+      # html << "<h1>#{note.title}</h1>
+      #           #{note.content}<br>
+      #           <small>#{note.updated_at}</small><hr>"
+      html << render_to_string(:action => :show, :layout => "pdf.html") 
+    end
+    pdf = WickedPdf.new.pdf_from_string(html) 
+  
+    send_data(pdf, 
+      :filename => "#{current_user.email}'s-notes.pdf", 
+      :disposition => 'attachment') 
   end
 
   private

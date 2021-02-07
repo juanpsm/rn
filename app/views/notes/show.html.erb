@@ -23,11 +23,20 @@
     <% end %>
   </p>
   
-  <div class="padding">
-    <%=@note.content %>
+  <div class="card">
+    <div class="card-body">
+      <%=@note.content %>
+    </div>
   </div>
 
+  <%= link_to "PDF", note_path(format: "pdf"), class:"btn btn-sm btn-outline-primary", title: 'View PDF', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom'%>
+  <%= link_to "PDF2", note_download_path, class:"btn btn-sm btn-outline-primary", title: 'View PDF', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom'%>
   <%= link_to 'Edit', edit_note_path(@note), class:"btn btn-sm btn-outline-warning" %>
   <%= link_to 'Delete', @note, method: :delete, data: { confirm: 'Are you sure?' }, class:"btn btn-sm btn-outline-danger" %> |
   <%= link_to 'Back', notes_path, class:"btn btn-sm btn-outline-secondary" %>
+  <%
+=begin%>
+ <%= link_to 'DW', download_note_path(@note), class:"btn btn-sm btn-outline-primary" %> 
+<%
+=end%>
 </div>

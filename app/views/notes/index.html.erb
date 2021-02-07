@@ -3,6 +3,16 @@
 
   <h1>Notes <!--%= link_to '+', new_note_path, class:"badge badge-pill badge-success" %--></h1>
   <div class="row">
+    <div class="col-12 text-right mb-2">
+      <%= link_to(new_note_path, class:"btn bg-lime") do %>
+        <i class="fas fa-plus"></i> add
+      <%end%>
+      <%= link_to(notes_download_path, class:"btn bg-primary", title:"Download ALL your notes") do %>
+        <i class="fas fa-download"></i>
+      <%end%>
+    </div>
+  </div>
+  <div class="row">
     <% unless @notes.blank? %>
       <%= render @notes %>
     <%else%>
