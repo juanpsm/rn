@@ -16,27 +16,37 @@
     <em>from book:</em>
     <%= @note.book.name %>
   </h6>
-  <p class="small text-secondary"> 
-    created: <%= @note.created_at %>
-    <% if @note.updated_at%>
-      | updated: <%= @note.updated_at %>
-    <% end %>
-  </p>
   
   <div class="card">
     <div class="card-body">
-      <%=@note.content %>
+        <%= @note.content %>
+    </div>
+    <div class="card-footer small text-muted text-right p-1">
+        created: <%= @note.created_at %>
+        <% if @note.updated_at%>
+          | updated: <%= @note.updated_at %>
+        <% end %>
     </div>
   </div>
-
-  <%= link_to "PDF", note_path(format: "pdf"), class:"btn btn-sm btn-outline-primary", title: 'View PDF', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom'%>
-  <%= link_to "PDF2", note_download_path, class:"btn btn-sm btn-outline-primary", title: 'View PDF', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom'%>
-  <%= link_to 'Edit', edit_note_path(@note), class:"btn btn-sm btn-outline-warning" %>
-  <%= link_to 'Delete', @note, method: :delete, data: { confirm: 'Are you sure?' }, class:"btn btn-sm btn-outline-danger" %> |
+  <div class="text-right">
+  <%= link_to(note_path(format: "pdf"), class:"btn btn-sm btn-outline-primary",
+      title: 'View PDF', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
+    <i class="fas fa-file-pdf"></i>
+  <%end%>
+  <%= link_to(note_download_path, class:"btn btn-sm btn-outline-primary",
+      title: 'Download PDF', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
+    <i class="fas fa-download"></i>
+  <%end%>
+  <%= link_to(edit_note_path(@note), class:"btn btn-sm btn-outline-warning",
+      title: 'Edit note', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
+    <i class="fas fa-pencil-alt"></i>
+  <%end%>
+  <%= link_to(note_path, method: :delete,
+      data: { confirm: 'Are you sure? This cannot be undone!' }, class:"btn btn-sm btn-outline-danger",
+      title: 'Delete note', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
+    <i class="far fa-trash-alt"></i>
+  <%end%>
+  |
   <%= link_to 'Back', notes_path, class:"btn btn-sm btn-outline-secondary" %>
-  <%
-=begin%>
- <%= link_to 'DW', download_note_path(@note), class:"btn btn-sm btn-outline-primary" %> 
-<%
-=end%>
+  </div>
 </div>
