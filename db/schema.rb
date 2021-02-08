@@ -51,7 +51,7 @@ ActiveRecord::Schema.define(version: 2021_01_28_130257) do
   end
 
   create_table "books", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.integer "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 2021_01_28_130257) do
   end
 
   create_table "notes", force: :cascade do |t|
-    t.string "title"
+    t.string "title", null: false
     t.integer "book_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

@@ -79,7 +79,7 @@ class NotesController < ApplicationController
   end
 
   def download
-    html = render_to_string(:action => :show, :formats => [:pdf], :layout => "pdf.html") 
+    html = render_to_string(:action => :show, :layout => "pdf.html") 
     pdf = WickedPdf.new.pdf_from_string(html) 
   
     send_data(pdf, 
@@ -112,7 +112,7 @@ class NotesController < ApplicationController
       # html << "<h1>#{note.title}</h1>
       #           #{note.content}<br>
       #           <small>#{note.updated_at}</small><hr>"
-      html << render_to_string(:action => :show, :format => :pdf, :layout => "pdf.html")
+      html << render_to_string(:action => :show, :layout => "pdf.html")
     end
     pdf = WickedPdf.new.pdf_from_string(html) 
   
