@@ -10,8 +10,8 @@ class NotesController < ApplicationController
     @notes = current_user.notes
 
     if params[:search] && params[:search] != ""
-      @notes = @notes.joins(:action_text_rich_text)
-             .where("action_text_rich_texts.body LIKE ?", "%#{params[:search]}%")
+      @notes =  @notes.joins(:action_text_rich_text)
+             .where("action_text_rich_texts.body LIKE ? OR title LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%")
     end
   end
 
