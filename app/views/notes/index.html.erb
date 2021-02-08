@@ -9,7 +9,13 @@
           <%= link_to(new_note_path, class:"btn bg-lime") do %>
             <i class="fas fa-plus"></i> add
           <%end%>
-          <%= link_to(notes_download_path, class:"btn bg-primary", title:"Download ALL your notes") do %>
+          <%= link_to(notes_download_all_path, class:"btn bg-primary", 
+              title:"Download ALL your notes in ONE file.") do %>
+            <i class="fas fa-download"></i>
+          <%end%>
+          <%= link_to(notes_download_separately_path, class:"btn bg-danger",
+              title:"Download ALL your notes in SEPARATE files.",
+              data: { confirm: 'Are you sure? This will download lots of files!' }) do %>
             <i class="fas fa-download"></i>
           <%end%>
         </div><!-- /.float -->

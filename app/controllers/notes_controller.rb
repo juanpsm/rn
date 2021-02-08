@@ -24,7 +24,7 @@ class NotesController < ApplicationController
         page_size: 'A4',
         template: "notes/show.html.erb",
         layout: "pdf.html",
-        orientation: "Landscape",
+        orientation: "Portrait",
         lowquality: true,
         zoom: 1,
         dpi: 75
@@ -79,7 +79,7 @@ class NotesController < ApplicationController
   end
 
   def download
-    html = render_to_string(:action => :show, :layout => "pdf.html") 
+    html = render_to_string(:action => :show, :formats => [:pdf], :layout => "pdf.html") 
     pdf = WickedPdf.new.pdf_from_string(html) 
   
     send_data(pdf, 
@@ -100,8 +100,40 @@ class NotesController < ApplicationController
     pdf = WickedPdf.new.pdf_from_string(html) 
   
     send_data(pdf, 
-      :filename => "#{current_user.email}'s-notes.pdf", 
+      :filename => "#{current_user.email}-notes.pdf", 
       :disposition => 'attachment') 
+  end
+
+  def download_all_notes_from_book
+    @book = current_user.books.find(params[:id])
+    html = ""
+    @book.notes.each do |note|
+      @note = Note.find(note.id)
+      # html << "<h1>#{note.title}</h1>
+      #           #{note.content}<br>
+      #           <small>#{note.updated_at}</small><hr>"
+      html << render_to_string(:action => :show, :format => :pdf, :layout => "pdf.html")
+    end
+    pdf = WickedPdf.new.pdf_from_string(html) 
+  
+    send_data(pdf, 
+      :filename => "#{@book.name}-notes.pdf", 
+      :disposition => 'attachment') 
+  end
+
+  def download_all_separately
+    # no funciona, no se puede llamar muchas veces a wicked_pdf en una sola acción
+    @notes = current_user.notes
+    @notes.each do |note|
+      @note = Note.find(note.id)
+      html = render_to_string(:action => :show, :layout => "pdf.html") 
+      pdf = WickedPdf.new.pdf_from_string(html) 
+      send_data(pdf, 
+        :filename => "#{note.book.name}-#{note.title}.pdf", 
+        :disposition => 'attachment')
+      sleep 1.5
+    end
+    return
   end
 
   private

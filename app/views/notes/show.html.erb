@@ -41,11 +41,11 @@
       <!-- Buttons -->
       <% if request.format.html? %>
         <div class="text-right">
-          <%= link_to(note_path(format: "pdf"), class:"btn btn-sm btn-outline-primary",
+          <%= link_to(note_path(@note, format: "pdf"), class:"btn btn-sm btn-outline-primary",
               title: 'View PDF', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
             <i class="fas fa-file-pdf"></i>
           <%end%>
-          <%= link_to(note_download_path, class:"btn btn-sm btn-outline-primary",
+          <%= link_to(note_download_path(@note), class:"btn btn-sm btn-outline-primary",
               title: 'Download PDF', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
             <i class="fas fa-download"></i>
           <%end%>
@@ -53,7 +53,7 @@
               title: 'Edit note', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
             <i class="fas fa-pencil-alt"></i>
           <%end%>
-          <%= link_to(note_path, method: :delete,
+          <%= link_to(note_path(@note), method: :delete,
               data: { confirm: 'Are you sure? This cannot be undone!' }, class:"btn btn-sm btn-outline-danger",
               title: 'Delete note', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
             <i class="far fa-trash-alt"></i>
