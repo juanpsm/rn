@@ -1,9 +1,11 @@
 class BooksController < ApplicationController
   before_action :set_book, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
 
   # GET /books or /books.json
   def index
-    @books = Book.all
+    # @books = Book.all
+    @books = current_user.books
   end
 
   # GET /books/1 or /books/1.json
@@ -22,6 +24,7 @@ class BooksController < ApplicationController
   # POST /books or /books.json
   def create
     @book = current_user.books.create(book_params)
+    @book.is_default = false
 
     respond_to do |format|
       if @book.save
@@ -55,15 +58,25 @@ class BooksController < ApplicationController
       format.json { head :no_content }
     end
   end
+  #Note, the rescue block is outside the destroy method
+  rescue_from 'Book::Error' do |exception|
+    redirect_to books_path, alert: exception.message
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_book
       @book = Book.find(params[:id])
+      restrict_access if @book.user_id != current_user.id
+    end
+
+    def restrict_access
+      redirect_to root_path, :alert => "Access denied"
     end
 
     # Only allow a list of trusted parameters through.
     def book_params
       params.require(:book).permit(:name)
     end
+
 end

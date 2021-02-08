@@ -1,53 +1,37 @@
-<!--<div class="card padding margin-top">
-  <%= link_to(note) do %>
-    <div class="card-body">
-      <h5 class="card-title text-uppercase"><%= note.id %>. <%= note.title %></h5>
-      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-      <p class="small text-secondary"> 
-        <%= note.content.to_plain_text.truncate(20) %>
-      </p>
-      <div class="margin-top">
-        <span class="small text-secondary ml-auto"> 
-          <% if note.updated_at%>
-            updated: <%= note.updated_at %>
-          <% else %>
-            created: <%= note.created_at %>
-          <% end %>
-        </span>
-        <%= link_to 'Show', note, class:"btn btn-sm btn-outline-info ml-auto" %>
-        <%= link_to 'Edit', edit_note_path(note), class:"btn btn-sm btn-outline-warning" %>
-        <%= link_to 'Destroy', note, method: :delete, data: { confirm: 'Are you sure?' }, class:"btn btn-sm btn-outline-danger" %>
-      </div>
-    </div>
-  <% end %>
-</div>-->
 <div class="col-12 col-md-4 col-sm-6 col-lg-3">
-  <div class="btn-group dropright padding">
     <div class="card">
-      
-        <div class="card-body">
-          <%= link_to(note) do %>
-            <h5 class="card-title text-uppercase"><%= note.title %></h5>
-          <% end %>
-          <h6 class="card-subtitle mb-2 text-muted">from book <%= link_to(note.book) do %><strong><%= note.book.name %></strong><% end %></h6>
-          <p class="small text-secondary margin-top"> 
-            <%= note.content.to_plain_text.truncate(20) %>
-          </p>
+      <div class="card-header">
+        <%= link_to(note) do %>
+          <h3 class="card-title"><%= note.title %></h3>
+        <% end %>
+        <div class="card-tools">
+          <!-- Collapse Button -->
+          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+          <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <div class="dropdown-menu">
+            <%= link_to 'Show', note, class:"dropdown-item" %>
+            <%= link_to 'Edit', edit_note_path(note), class:"dropdown-item" %>
+            <div class="dropdown-divider"></div>
+            <%= link_to 'Destroy', note, method: :delete, data: { confirm: 'Are you sure? This cannot be undone' }, class:"dropdown-item" %>
+          </div>
         </div>
-      
+        <!-- /.card-tools -->
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <!-- h6 class="card-subtitle mb-2 text-muted">from book <%= link_to(note.book) do %><strong><%= note.book.name %></strong><% end %></h6-->
+        <p class="small text-secondary margin-top">
+          <%= note.content.to_plain_text.truncate(20) %>
+        </p>
+      </div>
+      <!-- /.card-body -->
       <div class="card-footer small text-muted">
         <!--%= note.updated_at.to_formatted_s(:short) %-->
         <%= time_ago_in_words(note.updated_at) %> ago
       </div>
+      <!-- /.card-footer -->
     </div>
-    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <span class="sr-only">Toggle Dropdown</span>
-    </button>
-    <div class="dropdown-menu">
-      <%= link_to 'Show', note, class:"dropdown-item" %>
-      <%= link_to 'Edit', edit_note_path(note), class:"dropdown-item" %>
-      <div class="dropdown-divider"></div>
-      <%= link_to 'Destroy', note, method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %>
-    </div>
-  </div>
+    <!-- /.card -->
 </div>
