@@ -1,7 +1,7 @@
 class Book < ApplicationRecord
   belongs_to :user
   has_many :notes, :dependent => :destroy
-  validates :name, presence: true, uniqueness: { scope: :user,
+  validates :name, presence: true, uniqueness: { :case_sensitive => false, scope: :user,
     message: "of book already exists in your collection" }
   after_destroy :ensure_default_book_remains
 
