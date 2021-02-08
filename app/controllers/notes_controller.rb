@@ -114,7 +114,4 @@ class NotesController < ApplicationController
       params.require(:note).permit(:title, :book_id, :content)
     end
 
-    rescue_from ActiveRecord::RecordNotFound do |exception|
-      redirect_to root_path, alert: 'Record not found'
-    end
 end
