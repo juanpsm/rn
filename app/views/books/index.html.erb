@@ -43,7 +43,9 @@
                 <%= link_to 'Show', book, class:"dropdown-item" %>
                 <%= link_to 'Edit', edit_book_path(book), class:"dropdown-item" %>
                 <div class="dropdown-divider"></div>
-                <%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %>
+                <%= link_to 'Destroy', book, method: :delete, 
+                    data: { confirm: 'Are you sure? This will delete all notes within this book and cannot be undone!' },
+                    class:"dropdown-item" %>
               </div>
             </td>
           </tr>
