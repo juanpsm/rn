@@ -8,6 +8,10 @@ class NotesController < ApplicationController
     # @notes = Note.all
     # users can only see their notes
     @notes = current_user.notes
+
+    if params[:search] && params[:search] != ""
+      @notes = @notes.where("title LIKE ?", "%#{params[:search]}%")
+    end
   end
 
   # GET /notes/1 or /notes/1.json
@@ -111,7 +115,7 @@ class NotesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def note_params
-      params.require(:note).permit(:title, :book_id, :content)
+      params.require(:note).permit(:title, :book_id, :content, :search)
     end
 
 end

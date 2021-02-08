@@ -12,16 +12,17 @@
 
   <%if user_signed_in?%>
     <!-- SEARCH FORM -->
-    <form class="form-inline ml-3">
+    <%= form_tag "/notes", method: "GET", class: "form-inline ml-3" do %>
       <div class="input-group input-group-sm">
-        <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+        <%= text_field_tag :search, params[:search], class: "form-control form-control-navbar",
+           type: "search", placeholder: "Search", 'aria-label' => 'Search' %>
         <div class="input-group-append">
-          <button class="btn btn-navbar" type="submit">
+          <%= button_tag(type: "submit", class: "btn btn-navbar") do %>
             <i class="fas fa-search"></i>
-          </button>
+          <% end %>
         </div>
       </div>
-    </form>
+    <% end %>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
