@@ -3,25 +3,29 @@
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.2",
-    "@rails/actioncable": "^6.0.0",
+    "@rails/actioncable": "^6.1.2",
     "@rails/actiontext": "^6.1.1",
     "@rails/activestorage": "^6.0.0",
-    "@rails/ujs": "^6.0.0",
-    "@rails/webpacker": "6.0.0-beta.5",
+    "@rails/ujs": "^6.1.2",
+    "@rails/webpacker": "5.2.1",
     "admin-lte": "3.0",
-    "bootstrap": "3.4.1",
+    "bootstrap": "^3.1.1",
     "jquery": "^3.5.1",
     "moment": "^2.29.1",
     "moment-timezone": "0.5.31",
     "popper.js": "^1.16.1",
     "tempusdominus-core": "5.19.0",
     "trix": "^1.2.0",
-    "turbolinks": "^5.2.0",
-    "webpack": "4.0.0",
-    "webpack-cli": "^4.5.0"
+    "turbolinks": "^5.2.0"
   },
   "version": "0.1.0",
+  "scripts": {
+    "startdev": "webpack serve --mode development --env development --hot --port 3000"
+  },
   "devDependencies": {
-    "webpack-dev-server": "^3.11.2"
+    "webpack": "^5.21.2",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.2",
+    "webpack-merge": "^5.7.3"
   }
 }
