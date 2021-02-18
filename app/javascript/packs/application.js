@@ -10,6 +10,7 @@ import "channels"
 import 'bootstrap';
 import 'css/styles' // delete? 
 import '../stylesheets/application';
+require('admin-lte');
 import "@fortawesome/fontawesome-free/js/all";
 
 document.addEventListener("turbolinks:load", () => {
@@ -22,4 +23,3 @@ ActiveStorage.start()
 
 require("trix")
 require("@rails/actiontext")
-require('admin-lte');

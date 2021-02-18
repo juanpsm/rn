@@ -14,6 +14,7 @@ class BooksTest < ApplicationSystemTestCase
     visit books_url
     click_on "New Book"
 
+    check "Is default" if @book.is_default
     fill_in "Name", with: @book.name
     fill_in "User", with: @book.user_id
     click_on "Create Book"
@@ -26,6 +27,7 @@ class BooksTest < ApplicationSystemTestCase
     visit books_url
     click_on "Edit", match: :first
 
+    check "Is default" if @book.is_default
     fill_in "Name", with: @book.name
     fill_in "User", with: @book.user_id
     click_on "Update Book"

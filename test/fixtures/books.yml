@@ -2,8 +2,10 @@
 
 one:
   name: MyString
+  is_default: false
   user: one
 
 two:
   name: MyString
+  is_default: false
   user: two
