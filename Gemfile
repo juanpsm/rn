@@ -65,4 +65,4 @@ gem 'jquery-rails'
 gem 'bootstrap', '~> 4.3.1'
 gem 'wicked_pdf'
 # no sirve para win
-# gem 'wkhtmltopdf-binary'
+gem 'wkhtmltopdf-binary'
