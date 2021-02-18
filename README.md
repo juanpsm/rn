@@ -341,29 +341,29 @@ Primero se levanta un error si el libro que se intenta borrar tiene atributo `is
   end
   ```
 * Luego para darle un poco de estilo al proyecto integre [AdminLTE](https://dev.to/brayvasq/integrate-andminlte-with-ruby-on-rails-6-od7)
-* Intenté pensar si valía la pena implementar un [borrado lógico](https://medium.com/galvanize/soft-deletion-is-actually-pretty-hard-cb434e24825c#:~:text=Any%20record%20where%20that%20column,with%20the%20time%20of%20deletion.)
-  Pero terminé decidiendo que no, ya que para eso esta la funcionalidad de poder bajar los datos en pdf, y ademas se generan problemas con los borrados (y restauraciones) en cascada por culpa de las relaciones uno a muchos que se dan en el modelo. Como no está especificado en los requerimientos, decidi hacer un borrado en cascada. Es decir cuando se elimina un usuario, se eliminan todos sus libros, y a la vez cada ves libro que se elimine provocará que se eliminen todas las notas que a el pertenecen. Esto se encuentra debidamente advertido al usuario.
+* Intenté implementar un [borrado lógico](https://medium.com/galvanize/soft-deletion-is-actually-pretty-hard-cb434e24825c#:~:text=Any%20record%20where%20that%20column,with%20the%20time%20of%20deletion.)
+  Pero terminé decidiendo que no valía la pena, ya que para 'backup' está la funcionalidad de bajar los datos en pdf, y además se generan problemas con los borrados (y restauraciones) en cascada por culpa de las relaciones uno a muchos que se dan en el modelo. Como no está especificado en los requerimientos, decidí hacer un borrado físico en cascada. Es decir, cuando se elimina un usuario, se eliminan todos sus libros, y a la vez cada libro que se elimine provocará que se eliminen todas las notas que a él pertenecen. Esto se encuentra debidamente advertido al usuario.
   ```bash
   class Book < ApplicationRecord
   has_many :notes, :dependent => :destroy
   ```
-* Para agregar la funcionalidad de bajar los pdf necesitaba una librería que interpretase el html del tenxto rico de las notas y generase un PDF, para eso use la gema [wkhtmltopdf](https://www.viget.com/articles/how-to-create-pdfs-in-rails/). Obviamente tuvo sus [problemas](https://github.com/mileszs/wicked_pdf/issues/693) pero finalemente funcionó.
-* Tambien modifique algunas cosas en el cuerpo del texto rico de las notas, para que pueda contener diversos tipos de [archivos](https://acuments.com/uploading-audio-video-pdf-with-action-text.html). Sin embargo no no logré que estos atributes se embeban en el pdf si bien se muestran correctamente en la web.
-* [Validaciones](https://guides.rubyonrails.org/active_record_validations.html) pude prescindir de algunas validaciones que tenia en la version anterior debido a que los nombres de las notas eran nombres de archivos físicos y por ende tenian muchas restricciones. Aqui lo unico que me interesaba es que no estén en blanco el nombre de los libros y el título. Tambien que no se repitan, aunque solo con alcance de cada usuario. Y ademas quiero que no diferencie entre mayúscula y minúsculal para estas comparaciones. Asi que el `:title` de las notas tiene unicidad con *scope* a `:book` y el `:name` de estos tiene unicidad con *scope* a `:user`. Este último ademas tiene un email que si es unico en todo el sistema, y debe ser un email valido, y su contraseña debe tener mas de 6 caracteres.
+* Para agregar la funcionalidad de bajar los pdf necesitaba una librería que interpretase el html del texto rico de las notas y generase un PDF, para eso use la gema [wkhtmltopdf](https://www.viget.com/articles/how-to-create-pdfs-in-rails/). Obviamente tuvo sus [problemas](https://github.com/mileszs/wicked_pdf/issues/693) pero finalemente funcionó.
+* También modifiqué algunas cosas en el cuerpo del texto rico de las notas, para que pueda contener diversos tipos de [archivos](https://acuments.com/uploading-audio-video-pdf-with-action-text.html). Sin embargo no logré que estos atributos se embebieran en el pdf, si bien se muestran correctamente en la web.
+* [Validaciones](https://guides.rubyonrails.org/active_record_validations.html) pude prescindir de algunas validaciones que tenia en la version anterior debido a que los nombres de las notas eran nombres de archivos físicos y por ende tenian muchas restricciones. Aquí lo único que me interesaba es que no estén en blanco el nombre de los libros y el título. Tambien que no se repitan, aunque solo con alcance de cada usuario. Y ademas quiero que no diferencie entre mayúscula y minúsculas para estas comparaciones. Asi que el `:title` de las notas tiene unicidad con *scope* a `:book` y el `:name` de estos tiene unicidad con *scope* a `:user`. Este último ademas tiene un email que si es unico en todo el sistema, y debe ser un email valido, y su contraseña debe tener mas de 6 caracteres.
   ```bash
   class Book < ApplicationRecord
   ...
   validates :name, presence: true, uniqueness: { :case_sensitive => false, scope: :user,
     message: "of book already exists in your collection" }
   ```
-* Para el tema de los [permisos](https://stackoverflow.com/questions/7024111/how-do-i-prevent-access-to-records-that-belong-to-a-different-user/7024559) pense en utilizar una gema que se llama *CanCanCan*, pero decidí que era demasiado, ya que no tenia tantos permisos para setear. Simplemente un usuario no logueado solo puede loguearse o registrarse. Para ello puedo usar un helper de Devise:
+* Para el tema de los [permisos](https://stackoverflow.com/questions/7024111/how-do-i-prevent-access-to-records-that-belong-to-a-different-user/7024559) pensé en utilizar una gema que se llama *CanCanCan*, pero decidí que era demasiado, ya que no tenia tantos permisos para setear. Simplemente un usuario no logueado solo puede loguearse o registrarse. Para ello puedo usar un helper de Devise:
   ```bash
   class BooksController < ApplicationController
     before_action :authenticate_user!
   ```
-  Entonces todas las acciones de ese controlador estan protegidas por esa función, que si el usuario no se encuentra logueado lo redirige a `root` y le muestra una advertencia. Lo mismo hago en el controlador de notas.
-  Y luego me tengo que asegurar que solo pueda acceder a sus notas y libros sin nunca ver los otros.
-Para ello lo que hago es nunca buscar en los controladores cosas del estilo `@book = Book.all`, aprovecho la existencia de la variable `current_user` que tiene las colecciones y busco a partir de ellas.
+  Entonces todas las acciones de ese controlador estan protegidas por esa función, que si el usuario no se encuentra logueado lo redirige a `root_path` y le muestra una advertencia. Lo mismo hago en el controlador de notas.
+  Y luego me tengo que asegurar que solo pueda acceder a sus notas y libros sin nunca ver los de otros.
+Para ello lo que hago es nunca buscar en los controladores cosas del estilo `@book = Book.all`, aprovecho la existencia de la variable `current_user` la cual permite acceder a las colecciones y busco a partir de ellas.
   Por ejemplo una búsqueda, haciendola así seguro que no obtengo datos de otros usuarios, porque parto de esta colección acotada.
   ```bash
   @notes = current_user.notes
@@ -382,7 +382,7 @@ Para ello lo que hago es nunca buscar en los controladores cosas del estilo `@bo
     redirect_to root_path, :alert => "Access denied"
   end
   ```
-  En este si busco entre todos los libros del sistema, pero si no coincide el id con el usuario logueado, entonces llamo a `restrict_access` que activamente patea al usuario, y le informa que no puede acceder alli. Son dos opciones para hacer lo mismo, esta otorga mas información, y es más agresiva.
+  En este si busco entre todos los libros del sistema, pero si no coincide el id con el usuario logueado, entonces llamo a `restrict_access` que activamente patea al usuario, y le informa que no puede acceder allí. Son dos opciones para hacer lo mismo, esta otorga mas información, y es más agresiva.
   Otra opción sería restringiendo las `routes` directamente, pero [aquí](https://anadea.info/blog/rails-authentication-routing-constraints-considered-harmful) se explica muy bien por qué se desaconseja. Es mejor restringir controladores.
 * Luego de tantos errores quise agregar alguna forma de visualizarlos. Para eso hice [esto](https://web-crunch.com/posts/custom-error-page-ruby-on-rails) Aunque luego quite las excepciones, porque rails te continua mandando a una pagina de redirección. quizás hay que probarlo en *production* de verdad.
 * Algo que no se pedía pero quise agregar fue una búsqueda simple. Como los libros se pueden visualizar en una barra lateral, decidí hacer la busqueda por titulo y contenido de la nota, para lo que tuve que [investigar](https://stackoverflow.com/questions/59575397/search-text-in-actiontext-attribute) un poco como acceder al contenido del texto rico. Luego agrego en `Notas#index` el siguiente condicional, que si recibe un parametro no nulo `:search` filtra la coleccion de notas (ya esta filtrado por usuario) con una consulta que armé a mano. Hace un *join* de la tabla de notas con la de texto rico (se guarda en una tabla aparte) y me quedo con las filas que cumplan que el `body` de ese texto, ó el `title` de la nota, coincidan en parte (`LIKE`) con el parámetro recibido:
@@ -396,3 +396,4 @@ Para ello lo que hago es nunca buscar en los controladores cosas del estilo `@bo
 * Por ultimo algo que me quedó pendiente, aunque no era un requerimiento, fue establecer un criterio de paginación y el ordenamiento en las listas, para lo que vi que hay una [librería](https://github.com/ddnexus/pagy) pero no la instalé.
 * P.D: Estoy intentando deployar la app en Heroku para poder probarla allí, pero no se si va a poder ser, hay problemas con el *storage* y algunas librerías.
 * P.D. 2: No se pudo, y además intenté instalar la aplicación en un linux y había problemas de liberías. Para windows la librería de los pdf había que instalarla externamente, y eso generaba problemas, por eso lo voy a arreglar formateando windows de una vez por todas, y con la gema `'wkhtmltopdf-binary'` me genera los binarios de la librería en el directorio de la aplicación, pero funciona solo para linux. Así que a partir de la versión `2.0.1` se pierde soporte para windows xd.
+* P.D. 3: Anduvo Heroku!! se puede ver la app en producción [aquí](https://young-fjord-62178.herokuapp.com/) :)
