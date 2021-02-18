@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>PDFs - RN</title>
-    <%= wicked_pdf_stylesheet_link_tag "note" %>
-</head>
-<body>
-    <%= yield %>
-</body>
+    <head>
+        <title>PDFs - RN</title>
+        <meta charset="utf-8" />
+        <%= wicked_pdf_stylesheet_link_tag "notes" %>
+    </head>
+    <body>
+        <%= yield %>
+    </body>
 </html>
