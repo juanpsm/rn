@@ -1,0 +1,41 @@
+version: 2
+
+updates:
+  - package-ecosystem: bundler
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Un solo PR por semana con todos los parches de seguridad y menores,
+      # en lugar de decenas de PRs sueltos que se pisan entre sí.
+      ruby-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+      ruby-major:
+        update-types:
+          - major
+
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      js-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+      js-major:
+        update-types:
+          - major
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns:
+          - "*"
