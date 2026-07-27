@@ -75,17 +75,34 @@ jobs:
 
       - name: Paquetes npm con vulnerabilidades conocidas
         run: |
-          # yarn 1 no devuelve 0/1 sino un bitmask de severidades:
-          #   1 INFO | 2 LOW | 4 MODERATE | 8 HIGH | 16 CRITICAL
-          # y `--level` sólo filtra lo que imprime, no el exit code. Por eso hay
-          # que mirar los bits de HIGH (8) y CRITICAL (16) a mano.
+          # No se mira el exit code de `yarn audit`: yarn 1 devuelve un bitmask
+          # de severidades (1 INFO | 2 LOW | 4 MODERATE | 8 HIGH | 16 CRITICAL),
+          # y un fallo real del comando (registry caído, sin red) también sale
+          # con 1. O sea que "no pude auditar" es indistinguible de "encontré
+          # avisos informativos", y el paso se pondría verde sin haber auditado.
           #
+          # En su lugar se parsea `--json` y se exige el registro `auditSummary`,
+          # que yarn sólo emite si la auditoría se completó.
+          yarn audit --json > audit.jsonl || true
+
+          vulns=$(jq -c 'select(.type == "auditSummary") | .data.vulnerabilities' audit.jsonl | tail -1)
+
+          if [ -z "$vulns" ]; then
+            echo "::error::yarn audit no se completó: no hay auditSummary. No se auditó ninguna dependencia."
+            tail -5 audit.jsonl
+            exit 1
+          fi
+
+          echo "Resumen: $vulns"
+          high=$(echo "$vulns" | jq '.high')
+          critical=$(echo "$vulns" | jq '.critical')
+
           # Se ignora moderate a propósito: summernote no tiene parche upstream,
           # entra por admin-lte y la app nunca lo importa, así que no llega al
           # bundle. Fallar por eso dejaría el build en rojo para siempre.
-          yarn audit || EXIT=$?
-          if [ $(( ${EXIT:-0} & 24 )) -ne 0 ]; then
-            echo "::error::Hay vulnerabilidades high o critical en el árbol de npm"
+          if [ "$high" -gt 0 ] || [ "$critical" -gt 0 ]; then
+            echo "::error::Hay $high high y $critical critical en el árbol de npm"
             exit 1
           fi
+
           echo "Sin vulnerabilidades high ni critical"
