@@ -8,7 +8,7 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  config.cache_classes = false
+  config.enable_reloading = true
   config.action_view.cache_template_loading = true
 
   # Do not eager load code on boot. This avoids loading your whole application
@@ -27,8 +27,11 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
   config.cache_store = :null_store
 
-  # Raise exceptions instead of rendering exception templates.
-  config.action_dispatch.show_exceptions = false
+  # Propaga las excepciones de la aplicación (para que los tests fallen con el
+  # error real) pero renderiza las que el router sabe manejar, como
+  # ActionController::RoutingError, igual que en producción.
+  # Desde Rails 7.1 esta opción toma un símbolo; `false` está deprecado.
+  config.action_dispatch.show_exceptions = :rescuable
 
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
