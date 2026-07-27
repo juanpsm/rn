@@ -49,8 +49,16 @@ Luego de instalar las dependencias descriptas más abajo, acceder a `localhost:3
 $ git clone https://github.com/pibytes/rn
 $ cd rn
 ```
-### Versión de Ruby
->  #### `2.7.2`
+### Versiones de las herramientas
+>  #### Ruby `3.2.8`, Node.js `24.14.0`, Yarn `1.22.22`
+
+Las versiones están fijadas en `.tool-versions` (y la de Ruby también en
+`.ruby-version`), así que con [asdf](https://asdf-vm.com/) alcanza con:
+
+```bash
+$ asdf install
+```
+
 ### Instalación de dependencias
 
 ```bash
@@ -221,19 +229,21 @@ Para mi desgracia había un [bug](https://github.com/rails/rails/pull/41200) que
   #   access_key_id: 123
   #   secret_access_key: 345
 
-  # Used as the base secret for all 
-  
-  MessageVerifiers in Rails, including the one protecting cookies.
-  secret_key_base: 
-
-  89320682a93db53e46cb82a71ee0b8d0dbd9a18d90b1f90a7f377e7d216cfaf9255bc0415be85acb68343a4ea
-
-  4680e08507812bdd7d040f03d032a8bf733801d
+  # Used as the base secret for all
+  # MessageVerifiers in Rails, including the one protecting cookies.
+  secret_key_base: <REDACTADO>
   ```
+
+  > ⚠️ En una versión anterior de este README el valor real de `secret_key_base`
+  > quedó pegado en texto plano. Se quitó, pero **sigue estando en el historial
+  > de git**, así que hay que considerarlo comprometido: regenerá las
+  > credenciales (`rails credentials:edit` con la `master.key` correspondiente)
+  > o seteá un `SECRET_KEY_BASE` nuevo por variable de entorno. Rotarlo
+  > invalida las sesiones y cookies firmadas existentes.
   Sigue pasando. borrar lineas comentadas de config/storage.yml
 * Un truco aprendido cuando se están editando los estilos css, para no tener que hacer refresh todo el tiempo, además de correr el `rails server` se puede correr
   ```bash
-  ruby .\bin\webpack-dev-server
+  bin/shakapacker-dev-server
   ```
   Entonces se actualiza al instante.
 * Muchas veces paso que había que modificar alguna tabla para agregar algún atributo y se rompían las migraciones, no salía de "table already exists", entonces con `rails console` y luego
