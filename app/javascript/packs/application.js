@@ -8,8 +8,8 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import 'bootstrap';
-import 'css/styles' // delete? 
-import '../stylesheets/application';
+import '../css/styles.scss' // delete?
+import '../stylesheets/application.scss';
 require('admin-lte');
 import "@fortawesome/fontawesome-free/js/all";
 
