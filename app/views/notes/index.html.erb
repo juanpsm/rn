@@ -1,11 +1,11 @@
-<div class="content-header">
+<div class="app-content-header">
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">Notes</h1>
+        <h1 class="m-0 text-body-emphasis">Notes</h1>
       </div><!-- /.col -->
       <div class="col-sm-6">
-        <div class="float-sm-right">
+        <div class="float-sm-end">
           <%= link_to(new_note_path, class:"btn bg-lime") do %>
             <i class="fas fa-plus"></i> add
           <%end%>
@@ -24,7 +24,7 @@
   </div><!-- /.container-fluid -->
 </div>
 
-<div class="content container-fluid">
+<div class="container-fluid">
   <div class="container-fluid">
     <div class="row">
       <% unless @notes.blank? %>
