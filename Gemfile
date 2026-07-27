@@ -10,7 +10,7 @@ gem 'sqlite3', '~> 2.1'
 # Postgres (quitar sqlite3)
 # gem 'pg'
 # Use Puma as the app server
-gem 'puma', '~> 7.2'
+gem 'puma', '~> 8.0'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
 # Transpile app-like JavaScript. Read more: https://github.com/shakacode/shakapacker
