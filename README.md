@@ -234,12 +234,8 @@ Para mi desgracia había un [bug](https://github.com/rails/rails/pull/41200) que
   secret_key_base: <REDACTADO>
   ```
 
-  > ⚠️ En una versión anterior de este README el valor real de `secret_key_base`
-  > quedó pegado en texto plano. Se quitó, pero **sigue estando en el historial
-  > de git**, así que hay que considerarlo comprometido: regenerá las
-  > credenciales (`rails credentials:edit` con la `master.key` correspondiente)
-  > o seteá un `SECRET_KEY_BASE` nuevo por variable de entorno. Rotarlo
-  > invalida las sesiones y cookies firmadas existentes.
+  > El `secret_key_base` real quedó en el historial de git: si alguna vez se
+  > deploya esto, usar uno nuevo (`bin/rails secret`) vía `SECRET_KEY_BASE`.
   Sigue pasando. borrar lineas comentadas de config/storage.yml
 * Un truco aprendido cuando se están editando los estilos css, para no tener que hacer refresh todo el tiempo, además de correr el `rails server` se puede correr
   ```bash
