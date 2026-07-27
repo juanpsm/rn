@@ -3,6 +3,7 @@ require "test_helper"
 class NotesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @note = notes(:one)
+    sign_in @note.book.user
   end
 
   test "should get index" do
@@ -17,7 +18,8 @@ class NotesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create note" do
     assert_difference('Note.count') do
-      post notes_url, params: { note: { book_id: @note.book_id, title: @note.title } }
+      # El título debe ser distinto al de @note: Note valida unicidad por libro.
+      post notes_url, params: { note: { book_id: @note.book_id, title: 'Another note' } }
     end
 
     assert_redirected_to note_url(Note.last)
