@@ -19,6 +19,18 @@ module Rn
     #
     # config.time_zone = "Central Time (US & Canada)"
     config.eager_load_paths << Rails.root.join("extras")
+    # Se amplía el safelist de ActionText para poder embeber audio y video en
+    # las notas.
+    #
+    # `iframe` y `embed` quedan deliberadamente fuera: permiten incrustar una
+    # página o un plugin arbitrarios dentro de la nota, lo que habilita
+    # clickjacking y phishing almacenado. `video`/`audio`/`source` cubren el
+    # caso de uso real sin esa superficie de ataque.
+    #
+    # `style` sí se mantiene: el safe_list_sanitizer filtra el contenido del
+    # atributo contra un safelist de propiedades CSS y descarta las peligrosas
+    # (`position`, `z-index`, etc.), así que no permite montar overlays.
+    #
     # Desde Rails 7.1 `allowed_tags`/`allowed_attributes` valen nil por defecto
     # (significa "usar los del sanitizer"), así que hay que partir de esos
     # valores base en lugar de mutarlos in-place.
@@ -33,7 +45,7 @@ module Rn
       helper.allowed_tags =
         helper.sanitizer.class.allowed_tags +
         [ActionText::Attachment.tag_name, 'figure', 'figcaption'] +
-        %w[video audio source embed iframe]
+        %w[video audio source]
     end
   end
 end
