@@ -1,6 +1,6 @@
 version: 2
 
-# Nota: Dependabot sólo lee este archivo desde la rama por defecto (master).
+# Nota: Dependabot sólo lee este archivo desde la rama por defecto (main).
 # Mientras viva en una rama sin mergear, la configuración no está activa.
 #
 # `groups` aplica por defecto sólo a las version updates, así que cada

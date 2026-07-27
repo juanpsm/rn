@@ -234,12 +234,31 @@ Para mi desgracia había un [bug](https://github.com/rails/rails/pull/41200) que
   secret_key_base: <REDACTADO>
   ```
 
-  > ⚠️ En una versión anterior de este README el valor real de `secret_key_base`
-  > quedó pegado en texto plano. Se quitó, pero **sigue estando en el historial
-  > de git**, así que hay que considerarlo comprometido: regenerá las
-  > credenciales (`rails credentials:edit` con la `master.key` correspondiente)
-  > o seteá un `SECRET_KEY_BASE` nuevo por variable de entorno. Rotarlo
-  > invalida las sesiones y cookies firmadas existentes.
+  > ⚠️ Donde dice `<REDACTADO>` estaba pegado el `secret_key_base` real de la
+  > app. Se sacó de acá, pero sigue en el historial de git y este repo es
+  > público, así que ese valor hay que darlo por quemado. Hoy no afecta a nada
+  > porque el proyecto no está deployado.
+  >
+  > **Si algún día se deploya**, hay que usar uno nuevo. No se saca de ningún
+  > lado: es una cadena aleatoria que se genera en el momento.
+  >
+  > ```bash
+  > bin/rails secret
+  > # imprime 128 caracteres hex al azar. Eso es el valor.
+  > ```
+  >
+  > Y se carga como variable de entorno en la plataforma donde corra la app,
+  > nunca en un archivo del repo:
+  >
+  > ```bash
+  > heroku config:set SECRET_KEY_BASE=<lo que imprimió>   # Heroku
+  > fly secrets set SECRET_KEY_BASE=<...>                 # Fly
+  > docker run -e SECRET_KEY_BASE=<...>                   # Docker
+  > ```
+  >
+  > No hace falta la `master.key` ni el valor viejo: Rails toma
+  > `ENV["SECRET_KEY_BASE"]` con prioridad por sobre las credenciales.
+
   Sigue pasando. borrar lineas comentadas de config/storage.yml
 * Un truco aprendido cuando se están editando los estilos css, para no tener que hacer refresh todo el tiempo, además de correr el `rails server` se puede correr
   ```bash
