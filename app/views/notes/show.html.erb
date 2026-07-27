@@ -1,12 +1,12 @@
-<div class="content-header">
+<div class="app-content-header">
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark"><%= @note.title %></h1>
+        <h1 class="m-0 text-body-emphasis"><%= @note.title %></h1>
       </div><!-- /.col -->
       <div class="col-sm-6">
         <% if request.format.html? %>
-          <ol class="breadcrumb float-sm-right">
+          <ol class="breadcrumb float-sm-end">
             <li class="breadcrumb-item">
               <%= link_to(@note.book) do %>
                 <%= @note.book.name %>
@@ -15,7 +15,7 @@
             <li class="breadcrumb-item active"><%= @note.title %></li>
           </ol>
         <%else%>
-          <p class="breadcrumb float-sm-right">
+          <p class="breadcrumb float-sm-end">
             from:  <em><%= @note.book.name %></em>
           </p>
         <%end%>
@@ -24,14 +24,14 @@
   </div><!-- /.container-fluid -->
 </div>
 
-<div class="content container-fluid">
+<div class="container-fluid">
   <div class="container-fluid">
 
       <div class="card">
         <div class="card-body">
             <%= @note.content %>
         </div>
-        <div class="card-footer small text-muted text-right p-1">
+        <div class="card-footer small text-muted text-end p-1">
             created: <%= @note.created_at %>
             <% if @note.updated_at%>
               | updated: <%= @note.updated_at %>
@@ -40,22 +40,22 @@
       </div>
       <!-- Buttons -->
       <% if request.format.html? %>
-        <div class="text-right">
+        <div class="text-end">
           <%= link_to(note_path(@note, format: "pdf"), class:"btn btn-sm btn-outline-primary",
-              title: 'View PDF', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
+              title: 'View PDF', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'bottom') do %>
             <i class="fas fa-file-pdf"></i>
           <%end%>
           <%= link_to(note_download_path(@note), class:"btn btn-sm btn-outline-primary",
-              title: 'Download PDF', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
+              title: 'Download PDF', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'bottom') do %>
             <i class="fas fa-download"></i>
           <%end%>
           <%= link_to(edit_note_path(@note), class:"btn btn-sm btn-outline-warning",
-              title: 'Edit note', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
+              title: 'Edit note', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'bottom') do %>
             <i class="fas fa-pencil-alt"></i>
           <%end%>
           <%= link_to(note_path(@note), method: :delete,
               data: { confirm: 'Are you sure? This cannot be undone!' }, class:"btn btn-sm btn-outline-danger",
-              title: 'Delete note', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
+              title: 'Delete note', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'bottom') do %>
             <i class="far fa-trash-alt"></i>
           <%end%>
           |

@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html>
+<%# Bootstrap 5.3 sigue el color mode del sistema si no se fija uno. La app
+    siempre fue de tema claro, así que se declara explícitamente para no quedar
+    a merced de las preferencias del navegador. %>
+<html lang="en" data-bs-theme="light">
   <head>
     <title>Rn</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -11,23 +14,30 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body data-scrollbar-auto-hide="n" class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
+  <%# AdminLTE 4 arma el layout con un CSS grid en .app-wrapper, cuyas áreas son
+      .app-header, .app-sidebar, .app-main y .app-footer. `sidebar-expand-lg`
+      define a partir de qué breakpoint el sidebar queda fijo. %>
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <div class="app-wrapper">
       <%= render "base/header" %>
       <%= render "base/sidebar" %>
 
-      <div class="content-wrapper">
-        <%if notice %>
-          <p class="alert alert-info"><%= notice %></p>
-        <%end%>
-        <%if alert %>
-          <p class="alert alert-danger"><%= alert %></p>
-        <%end%>
-        
-        <%= yield %>
-      </div>
+      <main class="app-main">
+        <div class="app-content">
+          <div class="container-fluid">
+            <%if notice %>
+              <p class="alert alert-info"><%= notice %></p>
+            <%end%>
+            <%if alert %>
+              <p class="alert alert-danger"><%= alert %></p>
+            <%end%>
+          </div>
+
+          <%= yield %>
+        </div>
+      </main>
 
       <%= render "base/footer" %>
-    <div>
+    </div>
   </body>
 </html>

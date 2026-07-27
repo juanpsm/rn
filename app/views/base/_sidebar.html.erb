@@ -1,28 +1,32 @@
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<%# AdminLTE 4: .main-sidebar pasó a .app-sidebar, y el tema oscuro ya no se
+    pide con .sidebar-dark-primary sino con data-bs-theme de Bootstrap 5. %>
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
   <!-- Brand Logo -->
-  <a href="#" class="brand-link text-center">
-    <%= image_tag "logo.png", class:"brand-image img-circle elevation-3", alt:"RN Logo", style:"opacity: .8" %>
-    <span class="brand-text font-weight-light">RubyNotes</span>
-  </a>
+  <div class="sidebar-brand">
+    <a href="#" class="brand-link text-center">
+      <%= image_tag "logo.png", class:"brand-image rounded-circle shadow", alt:"RN Logo", style:"opacity: .8" %>
+      <span class="brand-text fw-light">RubyNotes</span>
+    </a>
+  </div>
 
   <!-- Sidebar -->
-  <div class="sidebar">
+  <div class="sidebar-wrapper">
     <%if user_signed_in?%>
       <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <%= image_tag "user2-160x160.jpg", class:"img-circle elevation-2", alt:"User Image" %>
-        </div>
-        <div class="info">
-          <a href="#" class="d-block"><%= current_user.email %></a>
-        </div>
+      <%# .user-panel / .image / .info no existen en v4: se arma con utilidades
+          de Bootstrap. %>
+      <div class="d-flex align-items-center gap-2 mt-3 pb-3 mb-3 px-3">
+        <%= image_tag "user2-160x160.jpg", class:"rounded-circle shadow-sm", alt:"User Image", width: 34 %>
+        <a href="#" class="d-block text-decoration-none"><%= current_user.email %></a>
       </div>
     <%end%> <!-- /.if user_signed_in? -->
 
     <!-- Sidebar Menu -->
     <nav class="mt-2">
-      <ul class="nav nav-pills nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu" data-accordion="false">
+      <%# .nav-sidebar pasó a .sidebar-menu y data-widget="treeview" a
+          data-lte-toggle="treeview". %>
+      <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
         <!-- Add icons to the links using the .nav-icon class
               with font-awesome or any other icon font library -->
         <%if user_signed_in?%>
@@ -39,17 +43,17 @@
               <i class="nav-icon fas fa-file-alt"></i>
               <p>
                 All Notes
-                <span class="right badge badge-danger"><%= current_user.notes.count %></span>
+                <span class="nav-badge badge bg-danger me-3"><%= current_user.notes.count %></span>
               </p>
             <%end%>
           </li>
-          <li class="nav-item has-treeview">
+          <li class="nav-item">
             <!--sacar link no hace nada-->
             <%= link_to(books_path, class:"nav-link") do %>
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Books
-                <i class="right fas fa-angle-left"></i>
+                <i class="nav-arrow fas fa-angle-left"></i>
               </p>
             <%end%>
             <ul class="nav nav-treeview">
@@ -66,7 +70,7 @@
                   <i class="nav-icon fas fa-book"></i>
                   <p>
                     All Books
-                    <span class="right badge badge-danger"><%= current_user.books.count %></span>
+                    <span class="nav-badge badge bg-danger me-3"><%= current_user.books.count %></span>
                   </p>
                 <%end%>
               </li>
@@ -81,13 +85,14 @@
             </ul>
           </li>
         <%else%> <!-- /.if user_signed_in? -->
-          <li class="nav-item">
-            <%= link_to(new_user_session_path, class:"btn btn-block bg-primary") do %>
+          <li class="nav-item px-3">
+            <%# BS5 eliminó .btn-block: se usa w-100. %>
+            <%= link_to(new_user_session_path, class:"btn w-100 bg-primary text-white") do %>
               <i class="nav-icon fas fa-sign-in-alt"></i> Login
             <%end%>
           </li>
-          <li class="nav-item mt-2">
-            <%= link_to(new_user_registration_path, class:"btn btn-block bg-lime") do %>
+          <li class="nav-item mt-2 px-3">
+            <%= link_to(new_user_registration_path, class:"btn w-100 bg-lime") do %>
               <i class="nav-icon fas fa-user-plus"></i> Sign Up
             <%end%>
           </li>
@@ -96,19 +101,5 @@
     </nav>
     <!-- /.sidebar-menu -->
   </div>
-  <!-- /.sidebar -->
+  <!-- /.sidebar-wrapper -->
 </aside>
-
-<!--script>
-  var url = window.location;
-
-  // for sidebar menu entirely but not cover treeview
-  $('ul.sidebar-menu a').filter(function() {
-    return this.href == url;
-  }).parent().addClass('active');
-
-  // for treeview
-  $('ul.treeview-menu a').filter(function() {
-    return this.href == url;
-  }).parentsUntil(".sidebar-menu > .treeview-menu").addClass('active');
-</script-->

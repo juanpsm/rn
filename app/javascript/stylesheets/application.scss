@@ -1,5 +1,68 @@
+// Bootstrap 5 se importa una sola vez acá. Antes lo importaban tanto este
+// archivo como css/styles.scss, así que se compilaba dos veces en el mismo
+// bundle; ese archivo se fusionó acá abajo.
 @import "bootstrap";
 
-/* For AdminLTE 3 */
+// AdminLTE 4 necesita que Bootstrap 5 ya esté cargado: usa funciones suyas
+// como color-contrast().
 @import "admin-lte";
-@import '@fortawesome/fontawesome-free';
+
+@import "@fortawesome/fontawesome-free";
+
+// AdminLTE 4 eliminó los helpers de color de la v3. `bg-lime` se usa en los
+// botones de alta, así que se redefine con el mismo valor que tenía la v3.
+.bg-lime {
+  background-color: #01ff70 !important;
+  color: #1f2d3d !important;
+}
+
+// ---------------------------------------------------------------------------
+// Clases propias del proyecto (antes en app/javascript/css/styles.scss)
+// ---------------------------------------------------------------------------
+
+.small-container {
+  width: 100%;
+  max-width: 650px;
+}
+
+.large-container {
+  width: 100%;
+  max-width: 960px;
+}
+
+.center-block {
+  margin: 0 auto;
+}
+
+.padding {
+  padding: 10px 15px;
+}
+
+.margin-top {
+  margin-top: 1.5em;
+}
+
+.field {
+  @extend .margin-top;
+
+  label {
+    @extend .text-uppercase;
+    @extend .text-secondary;
+  }
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+
+  input {
+    @extend .form-control;
+    @extend .bg-light;
+  }
+
+  input[type='checkbox'] {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+    margin-right: 0.5em;
+  }
+}

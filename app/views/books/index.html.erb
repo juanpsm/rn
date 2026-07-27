@@ -1,11 +1,11 @@
-<div class="content-header">
+<div class="app-content-header">
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">Books</h1>
+        <h1 class="m-0 text-body-emphasis">Books</h1>
       </div><!-- /.col -->
       <div class="col-sm-6">
-        <div class="float-sm-right">
+        <div class="float-sm-end">
           <%= link_to(new_book_path, class:"btn bg-lime", title:"Add a new book") do %>
             <i class="fas fa-plus"></i> add
           <%end%>
@@ -15,7 +15,7 @@
   </div><!-- /.container-fluid -->
 </div>
 
-<div class="content container-fluid">
+<div class="container-fluid">
   <div class="container-fluid">
     <table class="table table-bordered text-center">
       <thead>
@@ -36,8 +36,8 @@
             <td><%= book.created_at %></td>
             <td><%= book.updated_at %></td>
             <td>
-              <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="sr-only">Toggle Dropdown</span>
+              <button type="button" class="btn btn-tool dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
               </button>
               <div class="dropdown-menu">
                 <%= link_to 'Show', book, class:"dropdown-item" %>

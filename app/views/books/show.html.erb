@@ -1,12 +1,12 @@
-<div class="content-header">
+<div class="app-content-header">
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark"><%= @book.name %></h1>
+        <h1 class="m-0 text-body-emphasis"><%= @book.name %></h1>
       </div><!-- /.col -->
       <div class="col-sm-6">
         <% if request.format.html? %>
-          <ol class="breadcrumb float-sm-right">
+          <ol class="breadcrumb float-sm-end">
             <li class="breadcrumb-item">
               <%= link_to(books_path) do %>
                 books
@@ -20,17 +20,17 @@
   </div><!-- /.container-fluid -->
 </div>
 
-<div class="content container-fluid">
+<div class="container-fluid">
   <div class="container-fluid">
-    <div class="text-right">
+    <div class="text-end">
       <%= link_to(edit_book_path(@book), class:"btn btn-sm btn-outline-warning",
-          title: 'Edit book', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
+          title: 'Edit book', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'bottom') do %>
         <i class="fas fa-pencil-alt"></i>
       <%end%>
       <%= link_to(note_path, method: :delete,
           data: { confirm: 'Are you sure? This will delete all notes from this book and cannot be undone!' },
           class:"btn btn-sm btn-outline-danger",
-          title: 'Delete book', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
+          title: 'Delete book', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'bottom') do %>
         <i class="far fa-trash-alt"></i>
       <%end%>
       <%= link_to(download_all_notes_from_book_path, class:"btn btn-sm btn-outline-primary", 

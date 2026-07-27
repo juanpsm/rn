@@ -1,17 +1,6 @@
 // See the shakacode/shakapacker README and docs directory for advice on customizing your webpackConfig.
-const { generateWebpackConfig, merge } = require('shakapacker')
-const webpack = require('webpack')
+const { generateWebpackConfig } = require('shakapacker')
 
-// jQuery, Popper y $ son globales esperadas por Bootstrap 4, AdminLTE y
-// tempusdominus-core, que no las importan por sí mismas.
-const providePlugin = {
-  plugins: [
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      Popper: ['popper.js', 'default']
-    })
-  ]
-}
-
-module.exports = merge(generateWebpackConfig(), providePlugin)
+// Bootstrap 5 y AdminLTE 4 no usan jQuery ni la global `Popper`, así que ya no
+// hace falta el ProvidePlugin que exponía $, jQuery y Popper.
+module.exports = generateWebpackConfig()
