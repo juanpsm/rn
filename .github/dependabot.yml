@@ -1,0 +1,63 @@
+version: 2
+
+# Nota: Dependabot sólo lee este archivo desde la rama por defecto (master).
+# Mientras viva en una rama sin mergear, la configuración no está activa.
+#
+# `groups` aplica por defecto sólo a las version updates, así que cada
+# ecosistema declara además un grupo explícito con `applies-to:
+# security-updates`. Sin eso, las actualizaciones de seguridad seguirían
+# saliendo de a un PR por alerta, que es justamente lo que hizo que este repo
+# acumulara 239 alertas y 9 PRs sueltos.
+
+updates:
+  - package-ecosystem: bundler
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      bundler-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      bundler-version:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        # Los majors quedan fuera del grupo a propósito: salen como PR
+        # individual para poder revisarlos de a uno.
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      npm-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      npm-version:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      actions-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      actions-version:
+        applies-to: version-updates
+        patterns:
+          - "*"

@@ -3,6 +3,7 @@ require "test_helper"
 class BooksControllerTest < ActionDispatch::IntegrationTest
   setup do
     @book = books(:one)
+    sign_in @book.user
   end
 
   test "should get index" do
@@ -17,7 +18,8 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
 
   test "should create book" do
     assert_difference('Book.count') do
-      post books_url, params: { book: { is_default: @book.is_default, name: @book.name, user_id: @book.user_id } }
+      # El nombre debe ser distinto al de @book: Book valida unicidad por usuario.
+      post books_url, params: { book: { is_default: @book.is_default, name: 'Another book', user_id: @book.user_id } }
     end
 
     assert_redirected_to book_url(Book.last)
