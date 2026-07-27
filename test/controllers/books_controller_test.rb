@@ -35,6 +35,16 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # Regresión: el botón de borrar apuntaba a `note_path` (sin argumento), que
+  # tomaba el :id del request y armaba /notes/:id, así que borraba una nota en
+  # vez del libro.
+  test "show links the delete button to the book, not to a note" do
+    get book_url(@book)
+
+    destroy_links = css_select("a[data-method='delete']").map { |a| a["href"] }
+    assert_includes destroy_links, book_path(@book)
+  end
+
   test "should update book" do
     patch book_url(@book), params: { book: { is_default: @book.is_default, name: @book.name, user_id: @book.user_id } }
     assert_redirected_to book_url(@book)

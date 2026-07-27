@@ -42,6 +42,16 @@ class BooksTest < ApplicationSystemTestCase
     assert_selector "h1", text: "Nombre actualizado"
   end
 
+  test "destroying a Book from its show page" do
+    visit book_url(@book)
+
+    accept_confirm { find("a[href='#{book_path(@book)}'][data-method='delete']").click }
+
+    assert_text "Book was successfully destroyed"
+    assert_selector "h1", text: "Books"
+    assert_nil Book.find_by(id: @book.id)
+  end
+
   test "destroying a Book" do
     visit books_url
 

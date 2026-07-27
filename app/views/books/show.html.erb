@@ -27,13 +27,13 @@
           title: 'Edit book', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
         <i class="fas fa-pencil-alt"></i>
       <%end%>
-      <%= link_to(note_path, method: :delete,
+      <%= link_to(book_path(@book), method: :delete,
           data: { confirm: 'Are you sure? This will delete all notes from this book and cannot be undone!' },
           class:"btn btn-sm btn-outline-danger",
           title: 'Delete book', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom') do %>
         <i class="far fa-trash-alt"></i>
       <%end%>
-      <%= link_to(download_all_notes_from_book_path, class:"btn btn-sm btn-outline-primary", 
+      <%= link_to(download_all_notes_from_book_path(@book), class:"btn btn-sm btn-outline-primary",
           title:"Download ALL notes from this book in ONE file.") do %>
         <i class="fas fa-download"></i>
       <%end%>
