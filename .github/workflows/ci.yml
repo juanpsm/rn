@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          # Toma la versión de .ruby-version, así no hay que mantenerla en dos lugares.
+          ruby-version-file: .ruby-version
+          bundler-cache: true
+
+      - name: Instalar Node
+        uses: actions/setup-node@v4
+        with:
+          # setup-node sabe leer la línea `nodejs` de .tool-versions.
+          node-version-file: .tool-versions
+          cache: yarn
+
+      - name: Instalar dependencias de JS
+        run: yarn install --frozen-lockfile
+
+      - name: Preparar la base
+        run: bin/rails db:prepare
+
+      - name: Tests unitarios
+        run: bin/rails test
+
+      - name: Tests de sistema
+        # Corren en headless_chrome, que ya viene instalado en el runner.
+        run: bin/rails test:system
+
+      - name: Guardar capturas de los tests de sistema que fallaron
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: tmp/screenshots/
+          if-no-files-found: ignore
+
+  audit:
+    name: Auditoría de dependencias
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version-file: .ruby-version
+          bundler-cache: true
+
+      - name: Instalar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .tool-versions
+          cache: yarn
+
+      - name: Gemas con vulnerabilidades conocidas
+        run: bundle exec bundler-audit check --update
+
+      - name: Paquetes npm con vulnerabilidades conocidas
+        run: |
+          # yarn 1 no devuelve 0/1 sino un bitmask de severidades:
+          #   1 INFO | 2 LOW | 4 MODERATE | 8 HIGH | 16 CRITICAL
+          # y `--level` sólo filtra lo que imprime, no el exit code. Por eso hay
+          # que mirar los bits de HIGH (8) y CRITICAL (16) a mano.
+          #
+          # Se ignora moderate a propósito: summernote no tiene parche upstream,
+          # entra por admin-lte y la app nunca lo importa, así que no llega al
+          # bundle. Fallar por eso dejaría el build en rojo para siempre.
+          yarn audit || EXIT=$?
+          if [ $(( ${EXIT:-0} & 24 )) -ne 0 ]; then
+            echo "::error::Hay vulnerabilidades high o critical en el árbol de npm"
+            exit 1
+          fi
+          echo "Sin vulnerabilidades high ni critical"
