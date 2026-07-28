@@ -1,8 +1,28 @@
-<div class="text-center">
-  <div>
-    <h1>The page you were looking for doesn't exist.</h1>
-    <i class="fa-8x fas fa-exclamation-triangle text-warning"></i>
-    <h4 class="mt-2">404 Not Found</h4>
-    <p class="mt-2">You may have mistyped the address or the page may have moved.</p>
+<%# Las páginas de error usan la misma estructura que el resto: barra de
+    título arriba y contenido debajo. Antes tenían el h1 suelto y centrado,
+    con un ícono fa-8x que se comía la pantalla. %>
+<div class="app-content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-body-emphasis">404</h1>
+      </div><!-- /.col -->
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-end">
+          <li class="breadcrumb-item"><%= link_to 'Home', root_path %></li>
+          <li class="breadcrumb-item active">404</li>
+        </ol>
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div>
+
+<div class="container-fluid">
+  <div class="d-flex align-items-center gap-3 py-4">
+    <i class="fas fa-exclamation-triangle fa-3x text-warning" aria-hidden="true"></i>
+    <div>
+      <h2 class="h4 mb-1">The page you were looking for doesn't exist.</h2>
+      <p class="mb-0 text-secondary">You may have mistyped the address or the page may have moved.</p>
+    </div>
   </div>
 </div>

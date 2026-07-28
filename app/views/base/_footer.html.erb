@@ -1,9 +1,12 @@
-<!-- Main Footer -->
+<%# El pie traía el texto de ejemplo de la plantilla ("Copyright 2014-2019
+    AdminLTE.io" y "Anything you want"). Se reemplaza por la identidad del
+    proyecto. No se deja crédito a AdminLTE porque su licencia es MIT y no
+    exige atribución en la interfaz; la licencia sí viaja en node_modules. %>
 <footer class="app-footer">
-  <!-- To the right -->
   <div class="float-end d-none d-sm-inline">
-    Anything you want
+    <%= link_to "Código fuente", "https://github.com/juanpsm/rn",
+        class: "link-secondary", target: "_blank", rel: "noopener" %>
   </div>
-  <!-- Default to the left -->
-  <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+  <strong>RubyNotes</strong>
+  <span class="text-secondary">— gestor de notas</span>
 </footer>

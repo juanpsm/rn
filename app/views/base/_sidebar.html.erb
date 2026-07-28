@@ -16,9 +16,17 @@
       <!-- Sidebar user panel (optional) -->
       <%# .user-panel / .image / .info no existen en v4: se arma con utilidades
           de Bootstrap. %>
+      <%# Antes se mostraba la foto de ejemplo de AdminLTE, la misma persona
+          para todos los usuarios. Se reemplaza por la inicial del mail: no
+          finge una identidad, no pide una dependencia externa y distingue una
+          cuenta de otra. %>
       <div class="d-flex align-items-center gap-2 mt-3 pb-3 mb-3 px-3">
-        <%= image_tag "user2-160x160.jpg", class:"rounded-circle shadow-sm", alt:"User Image", width: 34 %>
-        <a href="#" class="d-block text-decoration-none"><%= current_user.email %></a>
+        <span class="user-initial" aria-hidden="true"><%= current_user.email.first.upcase %></span>
+        <%# `text-body-emphasis` es necesario: el <span> heredaría el color del
+            body (tema claro) y quedaría casi negro sobre el sidebar oscuro.
+            El `data-bs-theme` del aside redefine variables, pero no aplica
+            `color` por sí solo. %>
+        <span class="text-truncate text-body-emphasis" title="<%= current_user.email %>"><%= current_user.email %></span>
       </div>
     <%end%> <!-- /.if user_signed_in? -->
 

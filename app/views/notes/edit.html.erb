@@ -2,13 +2,13 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-body-emphasis">Editing Note <%= @note.id %></h1>
+        <h1 class="m-0 text-body-emphasis">Editing <%= @note.title %></h1>
       </div><!-- /.col -->
       <div class="col-sm-6">
           <ol class="breadcrumb float-sm-end">
             <li class="breadcrumb-item">Home</li>
             <li class="breadcrumb-item"><%= link_to 'notes', notes_path %></li>
-            <li class="breadcrumb-item active">new</li>
+            <li class="breadcrumb-item active">edit</li>
           </ol>
       </div><!-- /.col -->
     </div><!-- /.row -->
@@ -16,8 +16,7 @@
 </div>
 
 <div class="container-fluid">
-  <div class="container-fluid">
-    <%= render 'form', note: @note %>
-    <%= link_to 'Cancel', notes_path, class:"btn btn-sm btn-outline-secondary" %>
+  <div class="form-wide">
+    <%= render 'form', note: @note, cancel_path: notes_path, cancel_label: 'Cancel' %>
   </div>
 </div>
