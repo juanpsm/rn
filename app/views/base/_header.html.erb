@@ -37,7 +37,11 @@
             <i class="fas fa-2x fa-cog"></i>
           </a>
           <div class="dropdown-menu dropdown-menu-end">
-            <span class="dropdown-item-text">Options:</span>
+            <%# Antes acá había un "Options:" que no hacía nada, y la página de
+                editar la cuenta no tenía ningún link que llegara a ella. %>
+            <%= link_to edit_user_registration_path, class: "dropdown-item" do %>
+              <i class="fas fa-user"></i> My account
+            <% end %>
             <div class="dropdown-divider"></div>
             <%= link_to(destroy_user_session_path, method: :delete, data: { confirm: 'Are you sure? Ok, bye then!' },
                 class:"dropdown-item") do %>

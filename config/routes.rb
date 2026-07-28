@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   resources :notes
   resources :books
   devise_for :users
+  # La foto de perfil se actualiza aparte del formulario de Devise, que exige
+  # la contraseña actual. Ver ProfilePhotosController.
+  resource :profile_photo, only: [:update]
   root to: "home#index"
   
   get 'notes/:id/pdf', to: 'notes#download', as: 'note_download'

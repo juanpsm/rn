@@ -19,6 +19,11 @@ module Rn
     #
     # config.time_zone = "Central Time (US & Canada)"
     config.eager_load_paths << Rails.root.join("extras")
+
+    # Rails usa libvips por defecto, pero no está instalado ni en las máquinas
+    # de desarrollo ni en los runners de GitHub Actions; ImageMagick sí. Sin
+    # este cambio, generar la miniatura del avatar falla.
+    config.active_storage.variant_processor = :mini_magick
     # Se amplía el safelist de ActionText para poder embeber audio y video en
     # las notas.
     #

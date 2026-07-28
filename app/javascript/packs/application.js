@@ -15,6 +15,7 @@ import "../color_mode"
 import "admin-lte"
 import "../stylesheets/application.scss"
 import "@fortawesome/fontawesome-free/js/all"
+import "../avatar_cropper"
 
 document.addEventListener("turbolinks:load", () => {
   // En Bootstrap 5 los tooltips siguen siendo opt-in, pero se inicializan por

@@ -80,20 +80,35 @@ $rn-accent-hover: #196e4b;
   max-width: 52rem;
 }
 
-// Avatar del sidebar: la inicial del mail dentro de un círculo, en lugar de la
-// foto de ejemplo que traía la plantilla.
+// Avatar del usuario. Las tres fuentes (foto subida, Gravatar e inicial)
+// comparten forma y tamaño para que la interfaz no salte al cambiar de una a
+// otra. El tamaño concreto lo fija el helper con un style inline.
+.user-avatar {
+  flex: 0 0 auto;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+// Variante para cuando no hay imagen: la inicial del mail en un círculo.
 .user-initial {
   display: inline-flex;
-  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  width: 2.125rem;
-  height: 2.125rem;
-  border-radius: 50%;
   background-color: $rn-accent;
   color: #fff;
   font-weight: 600;
   line-height: 1;
+}
+
+// El área de recorte necesita una altura fija: Cropper.js dimensiona su
+// interfaz a partir del alto del contenedor de la imagen.
+.avatar-cropper-canvas {
+  max-height: 60vh;
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
 }
 
 // Separador entre grupos de botones, en reemplazo del carácter "|" que estaba

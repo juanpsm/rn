@@ -1,43 +1,109 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<div class="app-content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-body-emphasis">My account</h1>
+      </div><!-- /.col -->
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-end">
+          <li class="breadcrumb-item"><%= link_to 'Home', root_path %></li>
+          <li class="breadcrumb-item active">account</li>
+        </ol>
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+<%# `form-wide` y no `form-narrow`: esta página tiene la fila del avatar y
+    etiquetas largas, que a 26rem se parten en varias líneas. %>
+<div class="container-fluid">
+  <div class="form-wide">
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+    <h2 class="h5">Profile photo</h2>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
+    <%# Formulario aparte del de Devise: cambiar la foto no debería pedir la
+        contraseña actual. Ver ProfilePhotosController. %>
+    <%= form_with(model: resource, as: :user, url: profile_photo_path,
+                  method: :patch, html: { data: { avatar_form: true } }) do |f| %>
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <%= user_avatar_tag resource, size: 96, css_class: "shadow-sm" %>
 
-  <div class="field">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-    <% if @minimum_password_length %>
-      <br />
-      <em><%= @minimum_password_length %> characters minimum</em>
+        <div class="flex-grow-1">
+          <%= f.label :avatar, "Choose an image", class: "form-label" %>
+          <%= f.file_field :avatar, accept: "image/jpeg,image/png,image/webp",
+                           class: "form-control", data: { avatar_input: true } %>
+          <div class="form-text">JPEG, PNG or WebP, up to 2 MB. You can crop it before saving.</div>
+        </div>
+      </div>
+
+      <% if resource.avatar.attached? %>
+        <div class="form-check mb-2">
+          <%= f.check_box :remove_avatar, { class: "form-check-input" }, "1", "0" %>
+          <%= f.label :remove_avatar, "Remove the current photo", class: "form-check-label" %>
+        </div>
+      <% end %>
+
+      <div class="form-check mb-3">
+        <%= f.check_box :use_gravatar, class: "form-check-input" %>
+        <%= f.label :use_gravatar, "Use my Gravatar when I have no photo uploaded",
+                    class: "form-check-label" %>
+        <div class="form-text">
+          Your browser will request the image from gravatar.com using a hash of
+          your email address.
+        </div>
+      </div>
+
+      <%= f.submit "Save photo", class: "btn btn-primary" %>
     <% end %>
+
+    <hr class="my-4">
+
+    <h2 class="h5">Email and password</h2>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div class="field">
+        <%= f.label :email %>
+        <%= f.email_field :email, autocomplete: "email" %>
+      </div>
+
+      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+        <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+      <% end %>
+
+      <div class="field">
+        <%= f.label :password %> <i>(leave blank if you don't want to change it)</i>
+        <%= f.password_field :password, autocomplete: "new-password" %>
+        <% if @minimum_password_length %>
+          <em><%= @minimum_password_length %> characters minimum</em>
+        <% end %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password_confirmation %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i>
+        <%= f.password_field :current_password, autocomplete: "current-password" %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "Update" %>
+        <%= link_to "Back", root_path, class: "btn btn-outline-secondary" %>
+      </div>
+    <% end %>
+
+    <hr class="my-4">
+
+    <h2 class="h5">Cancel my account</h2>
+    <p class="text-secondary">This deletes your account and all of your notes.</p>
+    <%= button_to "Cancel my account", registration_path(resource_name),
+                  data: { confirm: "Are you sure? This cannot be undone." },
+                  method: :delete, class: "btn btn-outline-danger" %>
   </div>
+</div>
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
-
-<%= link_to "Back", :back %>
+<%= render "base/avatar_cropper_modal" %>
