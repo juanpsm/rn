@@ -29,7 +29,18 @@ $rn-accent-hover: #196e4b;
 // como color-contrast().
 @import "admin-lte";
 
-@import "@fortawesome/fontawesome-free";
+// FontAwesome como webfont. Hay que importar los estilos concretos aparte:
+// `fontawesome.scss` sólo trae el core y los códigos de cada ícono, mientras
+// que los @font-face viven en solid.scss / regular.scss. Importando nada más
+// el paquete, el CSS quedaba sin una sola declaración @font-face y los íconos
+// salían en cuadraditos. La app usa `fas` y `far`.
+//
+// `$fa-font-path` apunta al paquete porque el valor por defecto ("../webfonts")
+// es relativo a una ubicación que no existe en este bundle.
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+@import "@fortawesome/fontawesome-free/scss/fontawesome";
+@import "@fortawesome/fontawesome-free/scss/solid";
+@import "@fortawesome/fontawesome-free/scss/regular";
 
 // Acento para las acciones de alta. Reemplaza al `bg-lime` de AdminLTE 3, que
 // la v4 eliminó y que además era un verde neón.

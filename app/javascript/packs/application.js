@@ -14,7 +14,12 @@ import * as bootstrap from "bootstrap"
 import "../color_mode"
 import "admin-lte"
 import "../stylesheets/application.scss"
-import "@fortawesome/fontawesome-free/js/all"
+// FontAwesome se carga una sola vez, como webfont desde stylesheets/application.scss.
+// Antes también se importaba acá `@fortawesome/fontawesome-free/js/all`, que es
+// la variante SVG+JS: reemplaza cada <i> del documento por un <svg> mediante un
+// MutationObserver. Además de duplicar la librería, esa sustitución deja nodos
+// detached y hacía fallar de forma intermitente los tests de sistema con
+// "Node with given id does not belong to the document".
 import "../avatar_cropper"
 
 document.addEventListener("turbolinks:load", () => {
