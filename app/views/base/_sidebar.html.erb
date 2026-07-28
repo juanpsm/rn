@@ -5,7 +5,10 @@
   <!-- Brand Logo -->
   <div class="sidebar-brand">
     <a href="#" class="brand-link text-center">
-      <%= image_tag "logo.png", class:"brand-image rounded-circle shadow", alt:"RN Logo", style:"opacity: .8" %>
+      <%# Sin `rounded-circle` ni `opacity`: el logo es pixel art y el recorte
+          circular le comía las esquinas. `pixelated` evita que el navegador lo
+          suavice al reducirlo. %>
+      <%= image_tag "logo.png", class: "brand-image brand-image-pixel", alt: "RubyNotes" %>
       <span class="brand-text fw-light">RubyNotes</span>
     </a>
   </div>
