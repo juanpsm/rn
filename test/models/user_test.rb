@@ -43,6 +43,21 @@ class UserTest < ActiveSupport::TestCase
     assert_includes @user.errors[:avatar].to_sentence, "JPEG"
   end
 
+  # El chequeo importante: el tipo se decide por los bytes, no por lo que
+  # declara quien sube el archivo. ActiveStorage guarda la declaración del
+  # cliente, así que validar `avatar.content_type` dejaba pasar esto.
+  test "rejects a file that only claims to be an image" do
+    @user.avatar.attach(
+      io: File.open(Rails.root.join("test/fixtures/files/disguised.png")),
+      filename: "disguised.png",
+      content_type: "image/png"
+    )
+
+    assert_equal "image/png", @user.avatar.content_type, "ActiveStorage confía en el tipo declarado"
+    assert_not_predicate @user, :valid?
+    assert_includes @user.errors[:avatar].to_sentence, "JPEG"
+  end
+
   test "rejects an image over the size limit" do
     attach_avatar
     # Se falsea el tamaño en el blob para no versionar un archivo de 2 MB.

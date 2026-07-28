@@ -52,13 +52,44 @@ class User < ApplicationRecord
 
   # Se validan tipo y tamaño a mano en lugar de sumar la gema
   # active_storage_validations: son dos reglas y no justifican otra dependencia.
+  #
+  # El tipo se determina leyendo los bytes del archivo, no el `content_type`
+  # que declaró el cliente. ActiveStorage guarda la declaración del cliente:
+  # le pasa a Marcel el tipo declarado como pista, y Marcel la respeta. Un
+  # archivo de texto subido como "image/png" quedaba almacenado como imagen y
+  # pasaba esta validación.
   def avatar_is_a_reasonable_image
-    unless AVATAR_CONTENT_TYPES.include?(avatar.content_type)
-      errors.add(:avatar, "must be a JPEG, PNG or WebP image")
-    end
-
     if avatar.byte_size > AVATAR_MAX_SIZE
       errors.add(:avatar, "must be smaller than #{AVATAR_MAX_SIZE / 1.megabyte} MB")
+    end
+
+    # Sólo hay que analizar el archivo cuando se está adjuntando uno nuevo; si
+    # no, cada save del usuario releería el blob de más.
+    io = incoming_avatar_io
+    return if io.nil?
+
+    # Sin `declared_type` ni `name`: que decida únicamente por los magic bytes.
+    unless AVATAR_CONTENT_TYPES.include?(Marcel::MimeType.for(io))
+      errors.add(:avatar, "must be a JPEG, PNG or WebP image")
+    end
+  ensure
+    io.rewind if io.respond_to?(:rewind)
+  end
+
+  # El io original del archivo que se está adjuntando en este save. Sale de
+  # `attachment_changes` porque durante la validación el blob todavía no se
+  # subió al servicio y no se puede abrir.
+  def incoming_avatar_io
+    attachable = attachment_changes["avatar"]&.attachable
+    return if attachable.nil?
+
+    case attachable
+    when ActionDispatch::Http::UploadedFile, Rack::Test::UploadedFile
+      attachable.tempfile
+    when Hash
+      attachable[:io]
+    when File, Tempfile
+      attachable
     end
   end
 end

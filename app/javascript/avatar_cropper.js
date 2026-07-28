@@ -22,6 +22,31 @@ const OUTPUT_SIZE = 512
 // rechazar igual, así que conviene avisar antes de abrir el recorte.
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"]
 
+// Tope del lado largo de la copia de trabajo. El recorte final sale en
+// OUTPUT_SIZE, así que no hace falta decodificar una foto de 8000px entera: es
+// memoria del navegador desperdiciada.
+const MAX_WORKING_SIZE = 1600
+
+// Decodifica la imagen y la vuelve a codificar desde un canvas. Rechaza (con
+// throw) cualquier archivo que el navegador no pueda decodificar como imagen.
+async function decodeToCanvasBlob(file) {
+  const bitmap = await createImageBitmap(file)
+
+  const scale = Math.min(1, MAX_WORKING_SIZE / Math.max(bitmap.width, bitmap.height))
+  const canvas = document.createElement("canvas")
+  canvas.width = Math.round(bitmap.width * scale)
+  canvas.height = Math.round(bitmap.height * scale)
+  canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height)
+  bitmap.close()
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => (blob ? resolve(blob) : reject(new Error("no se pudo codificar la imagen"))),
+      "image/png"
+    )
+  })
+}
+
 function setup() {
   const input = document.querySelector("[data-avatar-input]")
   const modalEl = document.getElementById("avatar-cropper")
@@ -42,13 +67,37 @@ function setup() {
     if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null }
   }
 
-  input.addEventListener("change", () => {
+  input.addEventListener("change", async () => {
     const file = input.files && input.files[0]
-    if (!file || !ACCEPTED_TYPES.includes(file.type)) return
+    if (!file || !ACCEPTED_TYPES.includes(file.type)) {
+      input.value = ""
+      return
+    }
 
     cleanup()
     confirmed = false
-    objectUrl = URL.createObjectURL(file)
+
+    // La previsualización no se arma con los bytes del archivo, sino con los
+    // píxeles ya decodificados y vueltos a codificar por nosotros:
+    //
+    //   1. `createImageBitmap` decodifica de verdad la imagen, así que un
+    //      archivo que no sea una imagen raster válida (texto renombrado a
+    //      .png, un SVG, un polyglot) falla acá y no llega a mostrarse.
+    //   2. Al re-codificar desde el canvas se descarta todo lo que no sean
+    //      píxeles: metadatos EXIF, comentarios y cualquier carga útil
+    //      embebida en el archivo original.
+    //
+    // El servidor valida lo mismo por su cuenta leyendo los magic bytes; esto
+    // no lo reemplaza, evita mostrar en pantalla contenido sin decodificar.
+    let source
+    try {
+      source = await decodeToCanvasBlob(file)
+    } catch {
+      input.value = ""
+      return
+    }
+
+    objectUrl = URL.createObjectURL(source)
     image.src = objectUrl
     modal.show()
   })

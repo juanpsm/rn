@@ -40,6 +40,17 @@ class ProfilePhotosControllerTest < ActionDispatch::IntegrationTest
     assert_match(/JPEG/, flash[:alert])
   end
 
+  # Saltea el validador del navegador: postea directo un archivo de texto
+  # declarando image/png, que es lo que haría alguien atacando la app.
+  test "rejects a file that only claims to be an image" do
+    patch profile_photo_url, params: {
+      user: { avatar: fixture_file_upload("disguised.png", "image/png") }
+    }
+
+    assert_not_predicate @user.reload.avatar, :attached?
+    assert_match(/JPEG/, flash[:alert])
+  end
+
   # No pide la contraseña actual: ése es justamente el motivo de tener un
   # controlador aparte del de Devise.
   test "does not require the current password" do
