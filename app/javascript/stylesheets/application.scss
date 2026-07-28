@@ -1,3 +1,25 @@
+// ---------------------------------------------------------------------------
+// Paleta
+// ---------------------------------------------------------------------------
+// Se bajan la saturación de los colores de tema de Bootstrap antes de
+// importarlo, así el ajuste vale para botones, links, badges y todo lo que
+// derive de ellos, en vez de parchear clase por clase.
+//
+// Todos verifican contraste AA (>= 4.5) con texto blanco:
+//   verde #1f8159 -> 4.84    azul #3d6b9e -> 5.53    rojo #b5493f -> 5.26
+//
+// De referencia, el `bg-lime` de AdminLTE 3 que se usaba antes (#01ff70) daba
+// 1.35 contra blanco: por eso necesitaba texto oscuro y resultaba estridente.
+$primary: #3d6b9e;
+$success: #1f8159;
+$danger: #b5493f;
+$info: #4a7f96;
+$warning: #b5822e;
+
+// Color de las acciones de alta ("add", "New Note", "Sign Up").
+$rn-accent: $success;
+$rn-accent-hover: #196e4b;
+
 // Bootstrap 5 se importa una sola vez acá. Antes lo importaban tanto este
 // archivo como css/styles.scss, así que se compilaba dos veces en el mismo
 // bundle; ese archivo se fusionó acá abajo.
@@ -9,11 +31,46 @@
 
 @import "@fortawesome/fontawesome-free";
 
-// AdminLTE 4 eliminó los helpers de color de la v3. `bg-lime` se usa en los
-// botones de alta, así que se redefine con el mismo valor que tenía la v3.
-.bg-lime {
-  background-color: #01ff70 !important;
-  color: #1f2d3d !important;
+// Acento para las acciones de alta. Reemplaza al `bg-lime` de AdminLTE 3, que
+// la v4 eliminó y que además era un verde neón.
+.bg-accent {
+  background-color: $rn-accent !important;
+  color: #fff !important;
+
+  &:hover,
+  &:focus {
+    background-color: $rn-accent-hover !important;
+    color: #fff !important;
+  }
+}
+
+// Los botones con ícono arriba y texto abajo (home) o ícono al lado del texto
+// (sidebar) necesitan que el contenido se centre de verdad: `.btn` alinea con
+// `text-align`, que no alcanza cuando hay varios elementos en bloque.
+.btn-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  h6 {
+    margin: 0;
+  }
+}
+
+.btn-inline-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+// Ancho de lectura cómodo para los formularios de una sola columna (login,
+// registro, recupero de contraseña).
+.form-narrow {
+  width: 100%;
+  max-width: 26rem;
 }
 
 // ---------------------------------------------------------------------------
@@ -64,5 +121,17 @@
     width: auto;
     vertical-align: middle;
     margin-right: 0.5em;
+  }
+}
+
+// `f.submit` genera un <input type="submit"> sin clases, así que en todos los
+// formularios (Devise, notas, libros) salía con el botón nativo del navegador.
+// Se le da el estilo desde acá para no tener que tocar cada vista.
+.actions {
+  @extend .margin-top;
+
+  input[type='submit'] {
+    @extend .btn;
+    @extend .btn-primary;
   }
 }
