@@ -73,6 +73,40 @@ $rn-accent-hover: #196e4b;
   max-width: 26rem;
 }
 
+// Los formularios de notas y libros llevan un editor Trix, así que necesitan
+// más ancho que los de Devise, pero tampoco los 1000+ px del área completa.
+.form-wide {
+  width: 100%;
+  max-width: 52rem;
+}
+
+// Avatar del sidebar: la inicial del mail dentro de un círculo, en lugar de la
+// foto de ejemplo que traía la plantilla.
+.user-initial {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 2.125rem;
+  height: 2.125rem;
+  border-radius: 50%;
+  background-color: $rn-accent;
+  color: #fff;
+  font-weight: 600;
+  line-height: 1;
+}
+
+// Separador entre grupos de botones, en reemplazo del carácter "|" que estaba
+// suelto en el markup de las vistas `show`.
+.btn-group-divider {
+  display: inline-block;
+  width: 1px;
+  height: 1.25rem;
+  margin: 0 0.5rem;
+  vertical-align: middle;
+  background-color: var(--bs-border-color);
+}
+
 // ---------------------------------------------------------------------------
 // Clases propias del proyecto (antes en app/javascript/css/styles.scss)
 // ---------------------------------------------------------------------------
@@ -130,8 +164,22 @@ $rn-accent-hover: #196e4b;
 .actions {
   @extend .margin-top;
 
+  // El botón de envío y el de cancelar van en la misma fila y a la misma
+  // escala. Antes el "Cancel" vivía fuera del form y caía en un renglón
+  // aparte, más chico y con otro estilo.
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+
   input[type='submit'] {
     @extend .btn;
     @extend .btn-primary;
   }
+}
+
+// El <select> de `collection_select` no recibe clases, así que quedaba con el
+// desplegable nativo al lado de campos ya estilados.
+.field select {
+  @extend .form-select;
 }

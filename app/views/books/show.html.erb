@@ -37,11 +37,11 @@
           title:"Download ALL notes from this book in ONE file.") do %>
         <i class="fas fa-download"></i>
       <%end%>
-      |
+      <span class="btn-group-divider"></span>
       <%= link_to 'Back', books_path, class:"btn btn-sm btn-outline-secondary" %>
     </div>
     <p>
-      <%= @book.notes.size %> notes
+      <%= pluralize(@book.notes.size, "note") %>
     </p>
     <div class="row">
       <% unless @book.notes.blank? %>

@@ -16,7 +16,9 @@
     <%= form.text_field :name %>
   </div>
 
+  <%# Igual que en notes/_form: el botón de volver va en la misma fila. %>
   <div class="actions">
     <%= form.submit %>
+    <%= link_to cancel_label, cancel_path, class: "btn btn-outline-secondary" %>
   </div>
 <% end %>

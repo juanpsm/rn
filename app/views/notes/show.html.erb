@@ -31,10 +31,12 @@
         <div class="card-body">
             <%= @note.content %>
         </div>
+        <%# Antes se imprimía el timestamp crudo con zona ("2026-07-28 03:45:55
+            UTC"), que además no coincidía con el "hace un rato" del listado. %>
         <div class="card-footer small text-muted text-end p-1">
-            created: <%= @note.created_at %>
-            <% if @note.updated_at%>
-              | updated: <%= @note.updated_at %>
+            creada el <%= l @note.created_at, format: :long %>
+            <% if @note.updated_at && @note.updated_at != @note.created_at %>
+              &middot; editada <%= time_ago_in_words @note.updated_at %> atrás
             <% end %>
         </div>
       </div>
@@ -58,7 +60,7 @@
               title: 'Delete note', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'bottom') do %>
             <i class="far fa-trash-alt"></i>
           <%end%>
-          |
+          <span class="btn-group-divider"></span>
           <%= link_to 'Back', notes_path, class:"btn btn-sm btn-outline-secondary" %>
         </div>
       <%end%>

@@ -26,7 +26,11 @@
     <%=form.rich_text_area :content %>
   </div>
 
+  <%# El botón de volver se rinde acá adentro para que quede en la misma fila
+      que el de envío. Antes vivía en new/edit, después del form, y caía en un
+      renglón aparte con otro tamaño. %>
   <div class="actions">
     <%= form.submit %>
+    <%= link_to cancel_label, cancel_path, class: "btn btn-outline-secondary" %>
   </div>
 <% end %>

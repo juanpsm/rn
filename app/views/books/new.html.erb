@@ -16,10 +16,8 @@
 </div>
 
 <div class="container-fluid">
-  <div class="container-fluid">
+  <div class="form-wide">
 
-    <%= render 'form', book: @book %>
-
-    <%= link_to 'Back', books_path, class:"btn btn-sm btn-outline-secondary" %>
+    <%= render 'form', book: @book, cancel_path: books_path, cancel_label: 'Back' %>
   </div>
 </div>
