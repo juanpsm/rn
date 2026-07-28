@@ -9,6 +9,12 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <%# Antes no había ningún <link> de ícono, y el public/favicon.ico que
+        venía en el repo pesaba 0 bytes. %>
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= stylesheet_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>

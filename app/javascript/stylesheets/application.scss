@@ -91,6 +91,12 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   max-width: 52rem;
 }
 
+// El logo es pixel art: sin esto el navegador lo interpola al reducirlo y los
+// bordes quedan borrosos en vez de a bloques.
+.brand-image-pixel {
+  image-rendering: pixelated;
+}
+
 // Avatar del usuario. Las tres fuentes (foto subida, Gravatar e inicial)
 // comparten forma y tamaño para que la interfaz no salte al cambiar de una a
 // otra. El tamaño concreto lo fija el helper con un style inline.
