@@ -61,6 +61,19 @@ Las versiones están fijadas en `.tool-versions` (y la de Ruby también en
 asdf install
 ```
 
+### Dependencias del sistema
+
+Las miniaturas de las fotos de perfil se generan con **ImageMagick**, que no
+viene con asdf porque no es un runtime:
+
+```bash
+sudo apt-get install imagemagick   # Debian/Ubuntu
+brew install imagemagick           # macOS
+```
+
+Sin esto la app arranca igual, pero al mostrar un avatar subido falla con
+`executable not found: "convert"`.
+
 ### Instalación de dependencias
 
 ```bash

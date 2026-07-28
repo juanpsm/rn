@@ -16,6 +16,12 @@ import { Modal } from "bootstrap"
 // alta densidad, y mantiene el archivo chico.
 const OUTPUT_SIZE = 512
 
+// Misma lista que valida User en el servidor. Antes se aceptaba cualquier
+// `image/*`, que dejaba pasar SVG: no es explotable al cargarlo en un <img>
+// (los navegadores no ejecutan scripts ahí), pero el servidor lo iba a
+// rechazar igual, así que conviene avisar antes de abrir el recorte.
+const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"]
+
 function setup() {
   const input = document.querySelector("[data-avatar-input]")
   const modalEl = document.getElementById("avatar-cropper")
@@ -38,7 +44,7 @@ function setup() {
 
   input.addEventListener("change", () => {
     const file = input.files && input.files[0]
-    if (!file || !file.type.startsWith("image/")) return
+    if (!file || !ACCEPTED_TYPES.includes(file.type)) return
 
     cleanup()
     confirmed = false

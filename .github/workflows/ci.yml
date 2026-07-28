@@ -16,6 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # ActiveStorage genera la miniatura del avatar con ImageMagick
+      # (`variant_processor = :mini_magick`, ver config/application.rb). La
+      # imagen ubuntu-24.04 de los runners ya no lo trae preinstalado, así que
+      # sin esto las variantes fallan con: executable not found: "convert".
+      - name: Instalar ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends imagemagick
+
       - name: Instalar Ruby
         uses: ruby/setup-ruby@v1
         with:
