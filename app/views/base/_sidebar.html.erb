@@ -31,7 +31,7 @@
               with font-awesome or any other icon font library -->
         <%if user_signed_in?%>
           <li class="nav-item">
-            <%= link_to(new_note_path, class:"nav-link bg-lime") do %>
+            <%= link_to(new_note_path, class:"nav-link bg-accent") do %>
               <i class="nav-icon fas fa-plus"></i>
               <p>
                 New Note
@@ -58,7 +58,7 @@
             <%end%>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <%= link_to(new_book_path, class:"nav-link bg-lime") do %>
+                <%= link_to(new_book_path, class:"nav-link bg-accent") do %>
                   <i class="nav-icon fas fa-book-medical"></i>
                   <p>
                     New Book
@@ -85,15 +85,18 @@
             </ul>
           </li>
         <%else%> <!-- /.if user_signed_in? -->
+          <%# Estos son botones, no ítems de menú: `nav-icon` les fija un ancho
+              y un alineado pensados para el sidebar y descolocaba el ícono
+              respecto del texto. Se centra con flex. %>
           <li class="nav-item px-3">
             <%# BS5 eliminó .btn-block: se usa w-100. %>
-            <%= link_to(new_user_session_path, class:"btn w-100 bg-primary text-white") do %>
-              <i class="nav-icon fas fa-sign-in-alt"></i> Login
+            <%= link_to(new_user_session_path, class:"btn btn-primary btn-inline-icon w-100") do %>
+              <i class="fas fa-sign-in-alt"></i> Login
             <%end%>
           </li>
           <li class="nav-item mt-2 px-3">
-            <%= link_to(new_user_registration_path, class:"btn w-100 bg-lime") do %>
-              <i class="nav-icon fas fa-user-plus"></i> Sign Up
+            <%= link_to(new_user_registration_path, class:"btn btn-inline-icon w-100 bg-accent") do %>
+              <i class="fas fa-user-plus"></i> Sign Up
             <%end%>
           </li>
         <%end%> <!-- /.if user_signed_in? -->
