@@ -3,7 +3,8 @@ require "test_helper"
 class NotesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @note = notes(:one)
-    sign_in @note.book.user
+    @user = @note.book.user
+    sign_in @user
   end
 
   test "should get index" do
@@ -76,5 +77,33 @@ class NotesControllerTest < ActionDispatch::IntegrationTest
     get note_download_url(@note)
 
     assert_not_equal 500, response.status, -> { response.body[0, 300] }
+  end
+
+  # Regresión: la acción hacía un `send_data` por nota dentro de un bucle y
+  # fallaba con DoubleRenderError, porque una request HTTP devuelve una sola
+  # respuesta. Ahora los PDFs van dentro de un ZIP.
+  test "downloading notes separately returns a zip with one entry per note" do
+    get notes_download_separately_url
+
+    assert_not_equal 500, response.status, -> { response.body[0, 300] }
+    skip "wkhtmltopdf no disponible en esta máquina" unless response.status == 200
+
+    assert_equal "application/zip", response.media_type
+
+    entries = []
+    Zip::File.open_buffer(StringIO.new(response.body)) { |zip| zip.each { |e| entries << e.name } }
+
+    assert_equal @user.notes.count, entries.size
+    assert entries.all? { |n| n.end_with?(".pdf") }, entries.inspect
+  end
+
+  test "downloading notes separately warns when there is nothing to export" do
+    # `User#notes` es un has_many :through, no se puede modificar directamente.
+    Note.where(book: @user.books).destroy_all
+
+    get notes_download_separately_url
+
+    assert_redirected_to notes_path
+    assert_match(/any notes/, flash[:alert])
   end
 end

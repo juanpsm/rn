@@ -133,22 +133,44 @@ class NotesController < ApplicationController
       :disposition => 'attachment') 
   end
 
+  # Un PDF por nota, entregados dentro de un ZIP.
+  #
+  # Antes la acción hacía un `send_data` por nota dentro de un bucle, con un
+  # `sleep 1.5` entre medio, y fallaba con DoubleRenderError. El comentario
+  # original lo atribuía a wicked_pdf, pero el límite es de HTTP: una request
+  # devuelve una sola respuesta, así que no se pueden mandar N archivos
+  # sueltos. Empaquetarlos es la manera de conservar la intención.
   def download_all_separately
-    # no funciona, no se puede llamar muchas veces a wicked_pdf en una sola acción
-    @notes = current_user.notes
-    @notes.each do |note|
-      @note = Note.find(note.id)
-      html = render_to_string(:action => :show, :layout => "pdf") 
-      pdf = WickedPdf.new.pdf_from_string(html) 
-      send_data(pdf, 
-        :filename => "#{note.book.name}-#{note.title}.pdf", 
-        :disposition => 'attachment')
-      sleep 1.5
+    notes = current_user.notes.includes(:book)
+
+    if notes.empty?
+      return redirect_back fallback_location: notes_path,
+                           alert: "You don't have any notes to export yet."
     end
-    return
+
+    buffer = Zip::OutputStream.write_buffer do |zip|
+      notes.each do |note|
+        @note = note
+        zip.put_next_entry(pdf_entry_name(note))
+        zip.write(WickedPdf.new.pdf_from_string(render_to_string(action: :show, layout: "pdf")))
+      end
+    end
+
+    send_data buffer.string,
+              filename: "#{current_user.email}-notes.zip",
+              type: "application/zip",
+              disposition: "attachment"
   end
 
   private
+    # Nombre de cada archivo dentro del ZIP. Los títulos y los nombres de libro
+    # los escribe el usuario, así que pueden traer barras o caracteres que no
+    # sirven en una ruta.
+    def pdf_entry_name(note)
+      safe = ->(s) { s.to_s.gsub(%r{[/\\:*?"<>|]}, "-").strip.presence }
+      "#{safe.call(note.book&.name) || 'book'}/#{safe.call(note.title) || "note-#{note.id}"}.pdf"
+    end
+
     # Sólo se atrapan los RuntimeError que vienen de wicked_pdf; cualquier otro
     # se vuelve a levantar para no tapar errores reales de la aplicación.
     def pdf_generation_failed(error)

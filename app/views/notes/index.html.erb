@@ -13,10 +13,12 @@
               title:"Download ALL your notes in ONE file.") do %>
             <i class="fas fa-download"></i>
           <%end%>
-          <%= link_to(notes_download_separately_path, class:"btn bg-danger",
-              title:"Download ALL your notes in SEPARATE files.",
-              data: { confirm: 'Are you sure? This will download lots of files!' }) do %>
-            <i class="fas fa-download"></i>
+          <%# Ya no baja un archivo por nota, sino un ZIP con un PDF por nota:
+              una request HTTP devuelve una sola respuesta. Se ajustan el texto
+              y el ícono, y se quita el confirm que avisaba de "lots of files". %>
+          <%= link_to(notes_download_separately_path, class:"btn btn-secondary",
+              title:"Download a ZIP with one PDF per note.") do %>
+            <i class="fas fa-file-archive"></i>
           <%end%>
         </div><!-- /.float -->
       </div><!-- /.col -->
