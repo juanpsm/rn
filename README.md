@@ -74,31 +74,26 @@ brew install imagemagick           # macOS
 Sin esto la app arranca igual, pero al mostrar un avatar subido falla con
 `executable not found: "convert"`.
 
-#### Exportación a PDF en distribuciones derivadas de Ubuntu
+#### Exportación a PDF
 
-Las notas se exportan a PDF con **wkhtmltopdf**, que viene incluido en la gema
-`wkhtmltopdf-binary`. Esa gema elige el binario leyendo `/etc/os-release`, y
-mapea cualquier `ID` que empiece con `pop`, `zorin` o `elementary` a Ubuntu
-18.04 sin mirar la versión. En un Pop!_OS 22.04, por ejemplo, entrega un
-binario que enlaza OpenSSL 1.1 y falla con:
+Las notas se exportan con **wkhtmltopdf**, incluido en la gema
+`wkhtmltopdf-binary`. No hace falta instalar nada.
 
-```
-wkhtmltopdf_ubuntu_18.04_amd64: error while loading shared libraries:
-libssl.so.1.1: cannot open shared object file
-```
+La gema elige qué binario usar leyendo `/etc/os-release`, y mapea cualquier
+`ID` que empiece con `pop` o `zorin` a Ubuntu 18.04 **sin mirar la versión**.
+En un Pop!_OS 22.04 eso entrega un binario que enlaza OpenSSL 1.1 y falla con
+`error while loading shared libraries: libssl.so.1.1`.
 
-La app no se rompe —la descarga vuelve al listado con un aviso— pero para que
-funcione hay que apuntar al binario correcto:
+`config/initializers/wicked_pdf.rb` corrige esa detección automáticamente, así
+que no hay que configurar nada. Si aun así necesitás usar otro binario:
 
 ```bash
-gunzip -c "$(bundle show wkhtmltopdf-binary)/bin/wkhtmltopdf_ubuntu_22.04_amd64.gz" \
-  > ~/.local/bin/wkhtmltopdf
-chmod +x ~/.local/bin/wkhtmltopdf
-export WKHTMLTOPDF_PATH=~/.local/bin/wkhtmltopdf
+export WKHTMLTOPDF_HOST_SUFFIX=ubuntu_22.04_amd64   # otro de los que trae la gema
+export WKHTMLTOPDF_PATH=/usr/local/bin/wkhtmltopdf  # o un binario propio
 ```
 
-En Ubuntu y en los runners de GitHub Actions no hace falta: la detección
-acierta.
+Si la generación falla, la descarga vuelve al listado con un aviso en vez de
+romper la página, y el motivo queda en el log.
 
 ### Instalación de dependencias
 

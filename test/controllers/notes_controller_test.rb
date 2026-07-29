@@ -59,8 +59,9 @@ class NotesControllerTest < ActionDispatch::IntegrationTest
     test "#{path} renders without a template error" do
       get path
 
-      assert_not_equal 500, response.status,
-                       "la descarga falló: #{response.body[0, 300]}"
+      # El cuerpo se interpola sólo si no es un PDF: el binario viene en
+      # ASCII-8BIT y mezclarlo con un mensaje UTF-8 revienta.
+      assert_not_equal 500, response.status, -> { "la descarga falló: #{response.body[0, 300]}" }
 
       if response.status == 200
         assert_equal "application/pdf", response.media_type
@@ -74,6 +75,6 @@ class NotesControllerTest < ActionDispatch::IntegrationTest
   test "downloading a single note as PDF renders without a template error" do
     get note_download_url(@note)
 
-    assert_not_equal 500, response.status, response.body[0, 300]
+    assert_not_equal 500, response.status, -> { response.body[0, 300] }
   end
 end
