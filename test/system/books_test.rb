@@ -43,6 +43,26 @@ class BooksTest < ApplicationSystemTestCase
     assert_selector "h1", text: "Nombre actualizado"
   end
 
+  # Recuperado del PR #74, que arregló este mismo bug el 27/07: el botón usaba
+  # `note_path` sin argumento y el helper completaba el :id con el del request,
+  # así que desde /books/42 mandaba un DELETE a /notes/42.
+  #
+  # Ese test se perdió en la migración a AdminLTE 4 (785ffda), que reescribió
+  # books/show.html.erb desde la versión previa al arreglo y reintrodujo el
+  # bug. Sin el test, nadie lo notó hasta dos días después.
+  #
+  # El de controlador comprueba el href renderizado; éste hace el click y
+  # verifica que el libro efectivamente desaparezca.
+  test "destroying a Book from its show page" do
+    visit book_url(@book)
+
+    accept_confirm { find("a[aria-label='Delete book']").click }
+
+    assert_text "Book was successfully destroyed"
+    assert_selector "h1", text: "Books"
+    assert_nil Book.find_by(id: @book.id)
+  end
+
   test "destroying a Book" do
     visit books_url
 
