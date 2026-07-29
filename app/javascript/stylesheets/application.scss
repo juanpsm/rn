@@ -99,6 +99,50 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   max-width: 52rem;
 }
 
+// Se eliminó app/assets/stylesheets/scaffolds.scss, la hoja que genera el
+// scaffold de Rails, porque peleaba con el diseño entero: fijaba Verdana como
+// tipografía de toda la app, `margin: 33px` en el body y, sobre todo, estas
+// tres reglas sobre cualquier <a>:
+//
+//     a         { color: #000 }
+//     a:visited { color: #666 }
+//     a:hover   { color: #fff; background-color: #000 }
+//
+// `a:hover` pintaba un recuadro negro sobre cada link (marca, hamburguesa,
+// engranaje, perfil), y `a:visited` tiene especificidad (0,1,1), que le gana a
+// `.btn` (0,1,0): por eso los tiles del home ya visitados salían grises.
+//
+// Lo único que valía la pena conservar eran los estilos de error de
+// formulario, que se rehacen acá con los colores del tema.
+.field_with_errors {
+  // Rails envuelve el campo en un <div>, que rompería el layout del formulario.
+  display: contents;
+
+  input,
+  select,
+  textarea {
+    border-color: var(--bs-danger);
+  }
+}
+
+#error_explanation {
+  padding: 1rem 1rem 0.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--bs-danger-text-emphasis);
+  background-color: var(--bs-danger-bg-subtle);
+  border: 1px solid var(--bs-danger-border-subtle);
+  border-radius: var(--bs-border-radius);
+
+  h2 {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  ul {
+    margin-bottom: 0.5rem;
+  }
+}
+
 // AdminLTE 4 le da color a los submenús del sidebar pero no los sangra, así
 // que los hijos quedaban al mismo nivel visual que el padre y no se leía la
 // jerarquía. La v3 lo resolvía con la clase `nav-child-indent`, que la v4
