@@ -74,6 +74,27 @@ brew install imagemagick           # macOS
 Sin esto la app arranca igual, pero al mostrar un avatar subido falla con
 `executable not found: "convert"`.
 
+#### Exportación a PDF
+
+Las notas se exportan con **wkhtmltopdf**, incluido en la gema
+`wkhtmltopdf-binary`. No hace falta instalar nada.
+
+La gema elige qué binario usar leyendo `/etc/os-release`, y mapea cualquier
+`ID` que empiece con `pop` o `zorin` a Ubuntu 18.04 **sin mirar la versión**.
+En un Pop!_OS 22.04 eso entrega un binario que enlaza OpenSSL 1.1 y falla con
+`error while loading shared libraries: libssl.so.1.1`.
+
+`config/initializers/wicked_pdf.rb` corrige esa detección automáticamente, así
+que no hay que configurar nada. Si aun así necesitás usar otro binario:
+
+```bash
+export WKHTMLTOPDF_HOST_SUFFIX=ubuntu_22.04_amd64   # otro de los que trae la gema
+export WKHTMLTOPDF_PATH=/usr/local/bin/wkhtmltopdf  # o un binario propio
+```
+
+Si la generación falla, la descarga vuelve al listado con un aviso en vez de
+romper la página, y el motivo queda en el log.
+
 ### Instalación de dependencias
 
 ```bash

@@ -1,0 +1,18 @@
+<%# Migas de pan. Siempre empiezan en Home, así que las vistas pasan sólo el
+    tramo propio. Antes cada una las escribía a mano y habían derivado: en
+    new/edit el "Home" era texto plano en vez de un link, en home/index tenía
+    un atributo `active` suelto que no es HTML válido, y los listados
+    (notes/index, books/index) directamente no tenían migas.
+
+    `.breadcrumb` ya es flex, así que se alinea con justify-content y no con el
+    `float-sm-end` que traían las vistas. %>
+<% crumbs = [["Home", root_path]] + local_assigns.fetch(:crumbs, []) %>
+<%= tag.ol class: "breadcrumb justify-content-sm-end mb-0" do %>
+  <% crumbs.each_with_index do |(label, path), i| %>
+    <% last = i == crumbs.size - 1 %>
+    <%= tag.li class: class_names("breadcrumb-item", active: last),
+               aria: { current: ("page" if last) } do %>
+      <%= last || path.blank? ? label : link_to(label, path) %>
+    <% end %>
+  <% end %>
+<% end %>

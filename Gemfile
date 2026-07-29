@@ -61,6 +61,10 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # PDF
+# La descarga "por separado" empaqueta un PDF por nota en un ZIP: HTTP
+# devuelve una sola respuesta por request, así que no se pueden mandar N
+# archivos sueltos. Ruby no trae escritura de ZIP en la stdlib.
+gem 'rubyzip', '~> 3.0', require: 'zip'
 gem 'wicked_pdf', '~> 2.8'
 # no sirve para win
 gem 'wkhtmltopdf-binary'

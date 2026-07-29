@@ -1,24 +1,10 @@
-<div class="app-content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-body-emphasis">My account</h1>
-      </div><!-- /.col -->
-      <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-end">
-          <li class="breadcrumb-item"><%= link_to 'Home', root_path %></li>
-          <li class="breadcrumb-item active">account</li>
-        </ol>
-      </div><!-- /.col -->
-    </div><!-- /.row -->
-  </div><!-- /.container-fluid -->
-</div>
+<%= render "shared/page_header", title: "My account", crumbs: [["account"]] %>
 
-<%# `form-wide` y no `form-narrow`: esta página tiene la fila del avatar y
-    etiquetas largas, que a 26rem se parten en varias líneas. %>
+<%# Ancho intermedio: a 26rem las etiquetas largas se parten en varias líneas,
+    y a 52rem los inputs quedaban estirados de punta a punta con la página
+    vacía a la derecha. %>
 <div class="container-fluid">
-  <div class="form-wide">
-
+  <div class="form-medium">
     <h2 class="h5">Profile photo</h2>
 
     <%# Formulario aparte del de Devise: cambiar la foto no debería pedir la
@@ -92,7 +78,7 @@
 
       <div class="actions">
         <%= f.submit "Update" %>
-        <%= link_to "Back", root_path, class: "btn btn-outline-secondary" %>
+        <%= link_to "Cancel", root_path, class: "btn btn-outline-secondary" %>
       </div>
     <% end %>
 

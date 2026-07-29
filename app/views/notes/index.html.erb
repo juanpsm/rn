@@ -1,37 +1,19 @@
-<div class="app-content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-body-emphasis">Notes</h1>
-      </div><!-- /.col -->
-      <div class="col-sm-6">
-        <div class="float-sm-end">
-          <%= link_to(new_note_path, class:"btn bg-accent") do %>
-            <i class="fas fa-plus"></i> add
-          <%end%>
-          <%= link_to(notes_download_all_path, class:"btn bg-primary", 
-              title:"Download ALL your notes in ONE file.") do %>
-            <i class="fas fa-download"></i>
-          <%end%>
-          <%= link_to(notes_download_separately_path, class:"btn bg-danger",
-              title:"Download ALL your notes in SEPARATE files.",
-              data: { confirm: 'Are you sure? This will download lots of files!' }) do %>
-            <i class="fas fa-download"></i>
-          <%end%>
-        </div><!-- /.float -->
-      </div><!-- /.col -->
-    </div><!-- /.row -->
-  </div><!-- /.container-fluid -->
-</div>
+<% actions = capture do %>
+  <%= add_button new_note_path, "add", title: "Add a new note" %>
+  <%= action_button :download, notes_download_all_path,
+      label: "Download all your notes in one PDF" %>
+  <%= action_button :archive, notes_download_separately_path,
+      label: "Download a ZIP with one PDF per note" %>
+<% end %>
+
+<%= render "shared/page_header", title: "Notes", crumbs: [["notes"]], actions: actions %>
 
 <div class="container-fluid">
-  <div class="container-fluid">
-    <div class="row">
-      <% unless @notes.blank? %>
-        <%= render @notes %>
-      <%else%>
-        There is nothing here yet.
-      <%end%>
-    </div>
+  <div class="row">
+    <% if @notes.blank? %>
+      <p class="text-secondary">There is nothing here yet.</p>
+    <% else %>
+      <%= render @notes %>
+    <% end %>
   </div>
 </div>

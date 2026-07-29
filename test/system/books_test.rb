@@ -25,7 +25,8 @@ class BooksTest < ApplicationSystemTestCase
     assert_text "Book was successfully created"
     assert_selector "h1", text: "Cuaderno de viaje"
 
-    click_on "Back"
+    # Ya no hay botón "Back": la navegación de vuelta son las migas de pan.
+    within(".breadcrumb") { click_on "books" }
     assert_selector "h1", text: "Books"
   end
 
@@ -46,9 +47,10 @@ class BooksTest < ApplicationSystemTestCase
     visit books_url
 
     within first("tbody tr") do
-      # "Destroy" vive dentro de un dropdown de AdminLTE: hay que abrirlo.
-      find(".dropdown-toggle").click
-      accept_confirm { click_on "Destroy" }
+      # Las acciones ya no viven en un dropdown de texto: son botones de ícono
+      # con el nombre de la acción en aria-label (el tooltip de Bootstrap les
+      # saca el `title` al inicializarse).
+      accept_confirm { find("a[aria-label='Delete book']").click }
     end
 
     assert_text "Book was successfully destroyed"

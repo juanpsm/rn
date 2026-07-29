@@ -1,0 +1,20 @@
+<%# Encabezado común: título a la izquierda; migas y acciones a la derecha.
+    Este bloque estaba copiado literal en diez vistas, que es la razón por la
+    que se habían ido separando entre sí. Ahora las acciones viven siempre en
+    el mismo lugar: antes, en las vistas `show`, colgaban debajo del contenido
+    mientras que en los listados iban arriba. %>
+<div class="app-content-header">
+  <div class="container-fluid">
+    <div class="row mb-2 align-items-start">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-body-emphasis"><%= title %></h1>
+      </div><!-- /.col -->
+      <div class="col-sm-6 text-sm-end">
+        <%= render "shared/breadcrumb", crumbs: local_assigns.fetch(:crumbs, []) %>
+        <% if local_assigns[:actions].present? %>
+          <div class="record-actions justify-content-sm-end mt-2"><%= actions %></div>
+        <% end %>
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div>

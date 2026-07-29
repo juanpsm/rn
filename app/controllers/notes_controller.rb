@@ -3,6 +3,18 @@ class NotesController < ApplicationController
   before_action :set_note, only: %i[ show edit update destroy download]
   before_action :set_books, only: %i[ new create edit update ]
 
+  # wicked_pdf levanta RuntimeError cuando wkhtmltopdf no se puede ejecutar
+  # (binario ausente, incompatible con las libs del sistema, sin permisos).
+  # Sin esto la app devolvía un 500 pelado; ahora se vuelve al listado con el
+  # motivo, que además queda registrado.
+  rescue_from RuntimeError, with: :pdf_generation_failed
+
+  PDF_ERROR_PREFIXES = [
+    "Failed to execute", "PDF could not be generated", "Error generating PDF",
+    "Location of wkhtmltopdf unknown", "Bad wkhtmltopdf's path",
+    "wkhtmltopdf is not executable"
+  ].freeze
+
   # GET /notes or /notes.json
   def index
     # @notes = Note.all
@@ -22,8 +34,8 @@ class NotesController < ApplicationController
       format.pdf do
         render pdf: "#{@note.title}",
         page_size: 'A4',
-        template: "notes/show.html.erb",
-        layout: "pdf.html",
+        template: "notes/show",
+        layout: "pdf",
         orientation: "Portrait",
         lowquality: true,
         zoom: 1,
@@ -79,7 +91,7 @@ class NotesController < ApplicationController
   end
 
   def download
-    html = render_to_string(:action => :show, :layout => "pdf.html") 
+    html = render_to_string(:action => :show, :layout => "pdf") 
     pdf = WickedPdf.new.pdf_from_string(html) 
   
     send_data(pdf, 
@@ -95,7 +107,7 @@ class NotesController < ApplicationController
       # html << "<h1>#{note.title}</h1>
       #           #{note.content}<br>
       #           <small>#{note.updated_at}</small><hr>"
-      html << render_to_string(:action => :show, :layout => "pdf.html") 
+      html << render_to_string(:action => :show, :layout => "pdf") 
     end
     pdf = WickedPdf.new.pdf_from_string(html) 
   
@@ -112,7 +124,7 @@ class NotesController < ApplicationController
       # html << "<h1>#{note.title}</h1>
       #           #{note.content}<br>
       #           <small>#{note.updated_at}</small><hr>"
-      html << render_to_string(:action => :show, :layout => "pdf.html")
+      html << render_to_string(:action => :show, :layout => "pdf")
     end
     pdf = WickedPdf.new.pdf_from_string(html) 
   
@@ -121,22 +133,54 @@ class NotesController < ApplicationController
       :disposition => 'attachment') 
   end
 
+  # Un PDF por nota, entregados dentro de un ZIP.
+  #
+  # Antes la acción hacía un `send_data` por nota dentro de un bucle, con un
+  # `sleep 1.5` entre medio, y fallaba con DoubleRenderError. El comentario
+  # original lo atribuía a wicked_pdf, pero el límite es de HTTP: una request
+  # devuelve una sola respuesta, así que no se pueden mandar N archivos
+  # sueltos. Empaquetarlos es la manera de conservar la intención.
   def download_all_separately
-    # no funciona, no se puede llamar muchas veces a wicked_pdf en una sola acción
-    @notes = current_user.notes
-    @notes.each do |note|
-      @note = Note.find(note.id)
-      html = render_to_string(:action => :show, :layout => "pdf.html") 
-      pdf = WickedPdf.new.pdf_from_string(html) 
-      send_data(pdf, 
-        :filename => "#{note.book.name}-#{note.title}.pdf", 
-        :disposition => 'attachment')
-      sleep 1.5
+    notes = current_user.notes.includes(:book)
+
+    if notes.empty?
+      return redirect_back fallback_location: notes_path,
+                           alert: "You don't have any notes to export yet."
     end
-    return
+
+    buffer = Zip::OutputStream.write_buffer do |zip|
+      notes.each do |note|
+        @note = note
+        zip.put_next_entry(pdf_entry_name(note))
+        zip.write(WickedPdf.new.pdf_from_string(render_to_string(action: :show, layout: "pdf")))
+      end
+    end
+
+    send_data buffer.string,
+              filename: "#{current_user.email}-notes.zip",
+              type: "application/zip",
+              disposition: "attachment"
   end
 
   private
+    # Nombre de cada archivo dentro del ZIP. Los títulos y los nombres de libro
+    # los escribe el usuario, así que pueden traer barras o caracteres que no
+    # sirven en una ruta.
+    def pdf_entry_name(note)
+      safe = ->(s) { s.to_s.gsub(%r{[/\\:*?"<>|]}, "-").strip.presence }
+      "#{safe.call(note.book&.name) || 'book'}/#{safe.call(note.title) || "note-#{note.id}"}.pdf"
+    end
+
+    # Sólo se atrapan los RuntimeError que vienen de wicked_pdf; cualquier otro
+    # se vuelve a levantar para no tapar errores reales de la aplicación.
+    def pdf_generation_failed(error)
+      raise error unless PDF_ERROR_PREFIXES.any? { |p| error.message.start_with?(p) }
+
+      Rails.logger.error("Falló la generación del PDF: #{error.message}")
+      redirect_back fallback_location: notes_path,
+                    alert: "The PDF could not be generated. Check that wkhtmltopdf works on this machine."
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_note
       @note = current_user.notes.find(params[:id])
