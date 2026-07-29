@@ -84,11 +84,27 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   max-width: 26rem;
 }
 
+// Para formularios de una columna con etiquetas largas, como el de la cuenta:
+// más que `form-narrow`, para que las etiquetas no se partan, pero sin dejar
+// los inputs estirados de punta a punta.
+.form-medium {
+  width: 100%;
+  max-width: 34rem;
+}
+
 // Los formularios de notas y libros llevan un editor Trix, así que necesitan
 // más ancho que los de Devise, pero tampoco los 1000+ px del área completa.
 .form-wide {
   width: 100%;
   max-width: 52rem;
+}
+
+// AdminLTE 4 le da color a los submenús del sidebar pero no los sangra, así
+// que los hijos quedaban al mismo nivel visual que el padre y no se leía la
+// jerarquía. La v3 lo resolvía con la clase `nav-child-indent`, que la v4
+// eliminó.
+.sidebar-menu .nav-treeview > .nav-item > .nav-link {
+  padding-left: 1.75rem;
 }
 
 // El logo es pixel art: sin esto el navegador lo interpola al reducirlo y los

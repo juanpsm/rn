@@ -11,9 +11,24 @@
 WickedPdf.configure do |config|
   # Path to the wkhtmltopdf executable: This usually isn't needed if using
   # one of the wkhtmltopdf-binary family of gems.
-  # config.exe_path = '/usr/local/bin/wkhtmltopdf'
-  #   or
-  # config.exe_path = Gem.bin_path('wkhtmltopdf-binary', 'wkhtmltopdf')
+  #
+  # Escotilla de escape para distribuciones que la gema wkhtmltopdf-binary
+  # detecta mal. Su wrapper elige el binario leyendo /etc/os-release, y mapea
+  # cualquier ID que empiece con "pop" a Ubuntu 18.04 sin mirar la versión:
+  #
+  #     os = 'ubuntu_18.04' if ... os.start_with?('pop') ...
+  #
+  # En Pop!_OS 22.04 eso entrega un binario que enlaza libssl 1.1, y como el
+  # sistema trae OpenSSL 3 falla con "error while loading shared libraries".
+  # Los runners de GitHub (ubuntu_24) sí caen en el binario correcto.
+  #
+  # Para usar otro binario:
+  #   gunzip -c "$(bundle show wkhtmltopdf-binary)/bin/wkhtmltopdf_ubuntu_22.04_amd64.gz" > ~/.local/bin/wkhtmltopdf
+  #   chmod +x ~/.local/bin/wkhtmltopdf
+  #   export WKHTMLTOPDF_PATH=~/.local/bin/wkhtmltopdf
+  if ENV["WKHTMLTOPDF_PATH"].present?
+    config.exe_path = ENV["WKHTMLTOPDF_PATH"]
+  end
 
   # Layout file to be used for all PDFs
   # (but can be overridden in `render :pdf` calls)

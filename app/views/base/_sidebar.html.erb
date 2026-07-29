@@ -58,15 +58,18 @@
               </p>
             <%end%>
           </li>
+          <%# El treeview de AdminLTE 4 sólo cancela la navegación si el href es
+              "#": mientras este link apuntaba a books_path, el click navegaba
+              en vez de desplegar el submenú. No se pierde nada, porque "All
+              Books" ya está adentro. %>
           <li class="nav-item">
-            <!--sacar link no hace nada-->
-            <%= link_to(books_path, class:"nav-link") do %>
+            <a href="#" class="nav-link" role="button" aria-expanded="false">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Books
                 <i class="nav-arrow fas fa-angle-left"></i>
               </p>
-            <%end%>
+            </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <%= link_to(new_book_path, class:"nav-link bg-accent") do %>
