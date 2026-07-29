@@ -188,15 +188,41 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   }
 }
 
-// Separador entre grupos de botones, en reemplazo del carácter "|" que estaba
-// suelto en el markup de las vistas `show`.
-.btn-group-divider {
-  display: inline-block;
-  width: 1px;
-  height: 1.25rem;
-  margin: 0 0.5rem;
-  vertical-align: middle;
-  background-color: var(--bs-border-color);
+// Grupo de acciones sobre un registro (ver ActionsHelper). Bootstrap 5 le
+// sacó el margen propio a `.btn` —la v4 sí lo tenía—, así que la separación
+// entre botones dependía del espacio en blanco que quedara en el ERB, que es
+// justamente lo que hacía que unas vistas se vieran más apretadas que otras.
+//
+// Reemplaza a `.btn-group-divider`, el separador vertical que sólo aparecía
+// antes del botón "Back" de las vistas `show`; ese botón se eliminó porque las
+// migas de pan ya cumplen esa función.
+.record-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  justify-content: flex-end;
+
+  // Sin `nowrap` los botones del pie de las tarjetas se apilaban en columna
+  // cuando la fecha relativa era larga ("less than a minute ago"), y cada
+  // tarjeta terminaba con los íconos en una disposición distinta.
+  flex-wrap: nowrap;
+
+  > * {
+    flex: 0 0 auto;
+  }
+}
+
+// El título de la tarjeta es el link a la nota. Subrayado y en azul competía
+// con el resto y no se parecía al nombre del libro en la tabla; se deja como
+// texto normal que se subraya al pasar por encima.
+.card-title a {
+  color: var(--bs-body-emphasis-color);
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -237,15 +263,19 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
     margin-top: 0;
   }
 
-  input {
+  // El `:not` importa: antes esta regla alcanzaba también a los checkbox y les
+  // daba un rectángulo redondeado de 40 px de ancho, porque `form-control` es
+  // `display: block; width: 100%`. La página de la cuenta ya usaba
+  // `form-check-input`; acá se hace lo mismo para que el "Remember me" del
+  // login no sea el único distinto.
+  input:not([type='checkbox']) {
     @extend .form-control;
     @extend .bg-light;
   }
 
   input[type='checkbox'] {
-    display: inline-block;
-    width: auto;
-    vertical-align: middle;
+    @extend .form-check-input;
+
     margin-right: 0.5em;
   }
 }

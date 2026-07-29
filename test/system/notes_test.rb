@@ -43,10 +43,11 @@ class NotesTest < ApplicationSystemTestCase
   test "destroying a Note" do
     visit notes_url
 
-    within first(".card-tools") do
-      # "Destroy" vive dentro de un dropdown de AdminLTE: hay que abrirlo.
-      find(".dropdown-toggle").click
-      accept_confirm { click_on "Destroy" }
+    within first(".card-footer") do
+      # Las acciones ya no viven en un dropdown de texto: son botones de ícono
+      # con el nombre de la acción en aria-label (el tooltip de Bootstrap les
+      # saca el `title` al inicializarse).
+      accept_confirm { find("a[aria-label='Delete note']").click }
     end
 
     assert_text "Note was successfully destroyed"

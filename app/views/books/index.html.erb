@@ -1,56 +1,48 @@
-<div class="app-content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-body-emphasis">Books</h1>
-      </div><!-- /.col -->
-      <div class="col-sm-6">
-        <div class="float-sm-end">
-          <%= link_to(new_book_path, class:"btn bg-accent", title:"Add a new book") do %>
-            <i class="fas fa-plus"></i> add
-          <%end%>
-        </div><!-- /.float -->
-      </div><!-- /.col -->
-    </div><!-- /.row -->
-  </div><!-- /.container-fluid -->
-</div>
+<% actions = capture do %>
+  <%= add_button new_book_path, "add", title: "Add a new book" %>
+<% end %>
+
+<%= render "shared/page_header", title: "Books", crumbs: [["books"]], actions: actions %>
 
 <div class="container-fluid">
-  <div class="container-fluid">
-    <table class="table table-bordered text-center">
+  <%# `table-responsive` evita que la tabla desborde en pantallas angostas.
+      Se cambia `table-bordered text-center` por rayado y alineación por
+      columna: centrar los nombres de los libros los dejaba flotando. %>
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
       <thead>
         <tr>
-          <th>Name</th>
-          <th># Notes</th>
-          <th>Created</th>
-          <th>Updated</th>
-          <th>Actions</th>
+          <th scope="col">Name</th>
+          <th scope="col" class="text-center"># Notes</th>
+          <th scope="col">Created</th>
+          <th scope="col">Updated</th>
+          <th scope="col" class="text-end">Actions</th>
         </tr>
       </thead>
 
       <tbody>
         <% @books.each do |book| %>
           <tr>
-            <td><%= book.name %></td>
-            <td><%= book.notes.size %></td>
-            <td><%= book.created_at %></td>
-            <td><%= book.updated_at %></td>
+            <td><%= link_to book.name, book %></td>
+            <td class="text-center"><%= book.notes.size %></td>
+            <%# Antes se volcaba el Time crudo ("2026-07-28 01:41:34 UTC"), el
+                único lugar de la app donde las fechas se mostraban así. %>
+            <td class="small text-muted"><%= l book.created_at, format: :long %></td>
+            <td class="small text-muted"><%= time_ago_in_words(book.updated_at) %> ago</td>
             <td>
-              <button type="button" class="btn btn-tool dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="visually-hidden">Toggle Dropdown</span>
-              </button>
-              <div class="dropdown-menu">
-                <%= link_to 'Show', book, class:"dropdown-item" %>
-                <%= link_to 'Edit', edit_book_path(book), class:"dropdown-item" %>
-                <div class="dropdown-divider"></div>
-                <%= link_to 'Destroy', book, method: :delete, 
-                    data: { confirm: 'Are you sure? This will delete all notes within this book and cannot be undone!' },
-                    class:"dropdown-item" %>
-              </div>
+              <%= record_actions do %>
+                <%= action_button :edit, edit_book_path(book), label: "Edit book" %>
+                <%= action_button :destroy, book, label: "Delete book", method: :delete,
+                    confirm: "Are you sure? This will delete all notes within this book and cannot be undone." %>
+              <% end %>
             </td>
           </tr>
         <% end %>
       </tbody>
     </table>
   </div>
+
+  <% if @books.blank? %>
+    <p class="text-secondary">There is nothing here yet.</p>
+  <% end %>
 </div>

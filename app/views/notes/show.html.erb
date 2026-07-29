@@ -1,69 +1,40 @@
-<div class="app-content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-body-emphasis"><%= @note.title %></h1>
-      </div><!-- /.col -->
-      <div class="col-sm-6">
-        <% if request.format.html? %>
-          <ol class="breadcrumb float-sm-end">
-            <li class="breadcrumb-item">
-              <%= link_to(@note.book) do %>
-                <%= @note.book.name %>
-              <%end%>
-            </li>
-            <li class="breadcrumb-item active"><%= @note.title %></li>
-          </ol>
-        <%else%>
-          <p class="breadcrumb float-sm-end">
-            from:  <em><%= @note.book.name %></em>
-          </p>
-        <%end%>
-      </div><!-- /.col -->
-    </div><!-- /.row -->
-  </div><!-- /.container-fluid -->
-</div>
+<% if request.format.html? %>
+  <% actions = capture do %>
+    <%= action_button :pdf, note_path(@note, format: "pdf") %>
+    <%= action_button :download, note_download_path(@note) %>
+    <%= action_button :edit, edit_note_path(@note), label: "Edit note" %>
+    <%= action_button :destroy, note_path(@note), label: "Delete note", method: :delete,
+        confirm: "Are you sure? This cannot be undone." %>
+  <% end %>
+
+  <%# Ya no hay botón "Back": las migas cumplen la misma función y estaban
+      duplicando la navegación con dos vocabularios distintos. %>
+  <%= render "shared/page_header",
+      title: @note.title,
+      crumbs: [["notes", notes_path], [@note.book.name, book_path(@note.book)], [@note.title]],
+      actions: actions %>
+<% else %>
+  <%# En el PDF no hay navegación ni acciones: sólo el título y el libro. %>
+  <div class="app-content-header">
+    <div class="container-fluid">
+      <h1 class="m-0"><%= @note.title %></h1>
+      <p class="text-muted">from: <em><%= @note.book.name %></em></p>
+    </div>
+  </div>
+<% end %>
 
 <div class="container-fluid">
-  <div class="container-fluid">
-
-      <div class="card">
-        <div class="card-body">
-            <%= @note.content %>
-        </div>
-        <%# Antes se imprimía el timestamp crudo con zona ("2026-07-28 03:45:55
-            UTC"), que además no coincidía con el "hace un rato" del listado. %>
-        <div class="card-footer small text-muted text-end p-1">
-            creada el <%= l @note.created_at, format: :long %>
-            <% if @note.updated_at && @note.updated_at != @note.created_at %>
-              &middot; editada <%= time_ago_in_words @note.updated_at %> atrás
-            <% end %>
-        </div>
-      </div>
-      <!-- Buttons -->
-      <% if request.format.html? %>
-        <div class="text-end">
-          <%= link_to(note_path(@note, format: "pdf"), class:"btn btn-sm btn-outline-primary",
-              title: 'View PDF', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'bottom') do %>
-            <i class="fas fa-file-pdf"></i>
-          <%end%>
-          <%= link_to(note_download_path(@note), class:"btn btn-sm btn-outline-primary",
-              title: 'Download PDF', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'bottom') do %>
-            <i class="fas fa-download"></i>
-          <%end%>
-          <%= link_to(edit_note_path(@note), class:"btn btn-sm btn-outline-warning",
-              title: 'Edit note', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'bottom') do %>
-            <i class="fas fa-pencil-alt"></i>
-          <%end%>
-          <%= link_to(note_path(@note), method: :delete,
-              data: { confirm: 'Are you sure? This cannot be undone!' }, class:"btn btn-sm btn-outline-danger",
-              title: 'Delete note', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'bottom') do %>
-            <i class="far fa-trash-alt"></i>
-          <%end%>
-          <span class="btn-group-divider"></span>
-          <%= link_to 'Back', notes_path, class:"btn btn-sm btn-outline-secondary" %>
-        </div>
-      <%end%>
+  <div class="card">
+    <div class="card-body">
+      <%= @note.content %>
     </div>
-
+    <%# Antes se imprimía el timestamp crudo con zona ("2026-07-28 03:45:55
+        UTC"), que además no coincidía con el "hace un rato" del listado. %>
+    <div class="card-footer small text-muted text-end p-1">
+      creada el <%= l @note.created_at, format: :long %>
+      <% if @note.updated_at && @note.updated_at != @note.created_at %>
+        &middot; editada <%= time_ago_in_words @note.updated_at %> atrás
+      <% end %>
+    </div>
+  </div>
 </div>

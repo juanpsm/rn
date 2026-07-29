@@ -1,54 +1,30 @@
-<div class="app-content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-body-emphasis"><%= @book.name %></h1>
-      </div><!-- /.col -->
-      <div class="col-sm-6">
-        <% if request.format.html? %>
-          <ol class="breadcrumb float-sm-end">
-            <li class="breadcrumb-item">
-              <%= link_to(books_path) do %>
-                books
-              <%end%>
-            </li>
-            <li class="breadcrumb-item active"><%= @book.name %></li>
-          </ol>
-        <%end%>
-      </div><!-- /.col -->
-    </div><!-- /.row -->
-  </div><!-- /.container-fluid -->
-</div>
+<% actions = capture do %>
+  <%# El orden de las acciones es el mismo que en notes/show: primero las de
+      salida (descargas), después editar y por último borrar. Acá venían al
+      revés. %>
+  <%= action_button :download, download_all_notes_from_book_path(@book),
+      label: "Download all notes from this book in one PDF" %>
+  <%= action_button :edit, edit_book_path(@book), label: "Edit book" %>
+  <%# Bug: apuntaba a `note_path` sin argumento. Los helpers de ruta rellenan
+      el `:id` que falta con el de la request en curso, así que en vez de
+      fallar generaban `/notes/<id-del-libro>`: el botón "Delete book"
+      mandaba a borrar una nota cualquiera que tuviera ese id. %>
+  <%= action_button :destroy, book_path(@book), label: "Delete book", method: :delete,
+      confirm: "Are you sure? This will delete all notes within this book and cannot be undone." %>
+<% end %>
+
+<%= render "shared/page_header",
+    title: @book.name,
+    crumbs: [["books", books_path], [@book.name]],
+    actions: actions %>
 
 <div class="container-fluid">
-  <div class="container-fluid">
-    <div class="text-end">
-      <%= link_to(edit_book_path(@book), class:"btn btn-sm btn-outline-warning",
-          title: 'Edit book', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'bottom') do %>
-        <i class="fas fa-pencil-alt"></i>
-      <%end%>
-      <%= link_to(note_path, method: :delete,
-          data: { confirm: 'Are you sure? This will delete all notes from this book and cannot be undone!' },
-          class:"btn btn-sm btn-outline-danger",
-          title: 'Delete book', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'bottom') do %>
-        <i class="far fa-trash-alt"></i>
-      <%end%>
-      <%= link_to(download_all_notes_from_book_path, class:"btn btn-sm btn-outline-primary", 
-          title:"Download ALL notes from this book in ONE file.") do %>
-        <i class="fas fa-download"></i>
-      <%end%>
-      <span class="btn-group-divider"></span>
-      <%= link_to 'Back', books_path, class:"btn btn-sm btn-outline-secondary" %>
-    </div>
-    <p>
-      <%= pluralize(@book.notes.size, "note") %>
-    </p>
-    <div class="row">
-      <% unless @book.notes.blank? %>
-        <%= render @book.notes %>
-      <%else%>
-        There is nothing here yet.
-      <%end%>
-    </div>
+  <p class="text-secondary"><%= pluralize(@book.notes.size, "note") %></p>
+  <div class="row">
+    <% if @book.notes.blank? %>
+      <p class="text-secondary">There is nothing here yet.</p>
+    <% else %>
+      <%= render @book.notes %>
+    <% end %>
   </div>
 </div>

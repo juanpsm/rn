@@ -47,4 +47,25 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to books_url
   end
+
+  # Regresión: la vista usaba `note_path` sin argumento. Los helpers de ruta
+  # completan el `:id` que falta con el de la request en curso, así que en vez
+  # de fallar generaban `/notes/<id-del-libro>` y el botón "Delete book"
+  # apuntaba a borrar una nota.
+  test "the delete action on a book points at the book" do
+    get book_url(@book)
+
+    assert_select %(a[aria-label="Delete book"]) do |links|
+      assert_equal 1, links.size
+      assert_equal book_path(@book), links.first["href"]
+      assert_equal "delete", links.first["data-method"]
+    end
+  end
+
+  test "every book action resolves to an explicit id" do
+    get book_url(@book)
+
+    assert_select %(a[aria-label="Edit book"][href=?]), edit_book_path(@book)
+    assert_select %(a[href=?]), download_all_notes_from_book_path(@book)
+  end
 end

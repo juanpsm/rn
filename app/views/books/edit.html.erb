@@ -1,23 +1,7 @@
-<div class="app-content-header center-block">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-body-emphasis">Editing Book</h1>
-      </div><!-- /.col -->
-      <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-end">
-            <li class="breadcrumb-item">Home</li>
-            <li class="breadcrumb-item"><%= link_to 'books', books_path %></li>
-            <li class="breadcrumb-item active">edit</li>
-          </ol>
-      </div><!-- /.col -->
-    </div><!-- /.row -->
-  </div><!-- /.container-fluid -->
-</div>
+<%= render "shared/page_header", title: "Editing #{@book.name}", crumbs: [["books", books_path], [@book.name, book_path(@book)], ["edit"]] %>
 
 <div class="container-fluid">
   <div class="form-wide">
-
-    <%= render 'form', book: @book, cancel_path: books_path, cancel_label: 'Cancel' %>
+    <%= render 'form', book: @book, cancel_path: book_path(@book), cancel_label: 'Cancel' %>
   </div>
 </div>
