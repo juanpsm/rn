@@ -74,6 +74,32 @@ brew install imagemagick           # macOS
 Sin esto la app arranca igual, pero al mostrar un avatar subido falla con
 `executable not found: "convert"`.
 
+#### Exportación a PDF en distribuciones derivadas de Ubuntu
+
+Las notas se exportan a PDF con **wkhtmltopdf**, que viene incluido en la gema
+`wkhtmltopdf-binary`. Esa gema elige el binario leyendo `/etc/os-release`, y
+mapea cualquier `ID` que empiece con `pop`, `zorin` o `elementary` a Ubuntu
+18.04 sin mirar la versión. En un Pop!_OS 22.04, por ejemplo, entrega un
+binario que enlaza OpenSSL 1.1 y falla con:
+
+```
+wkhtmltopdf_ubuntu_18.04_amd64: error while loading shared libraries:
+libssl.so.1.1: cannot open shared object file
+```
+
+La app no se rompe —la descarga vuelve al listado con un aviso— pero para que
+funcione hay que apuntar al binario correcto:
+
+```bash
+gunzip -c "$(bundle show wkhtmltopdf-binary)/bin/wkhtmltopdf_ubuntu_22.04_amd64.gz" \
+  > ~/.local/bin/wkhtmltopdf
+chmod +x ~/.local/bin/wkhtmltopdf
+export WKHTMLTOPDF_PATH=~/.local/bin/wkhtmltopdf
+```
+
+En Ubuntu y en los runners de GitHub Actions no hace falta: la detección
+acierta.
+
 ### Instalación de dependencias
 
 ```bash
