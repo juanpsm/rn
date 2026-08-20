@@ -36,12 +36,16 @@
     "terser-webpack-plugin": "^5.3.14",
     "webpack": "^5.102.4",
     "webpack-assets-manifest": "^6.2.1",
-    "webpack-cli": "^6.0.1",
+    "webpack-cli": "^7.2.2",
     "webpack-dev-server": "^5.2.6",
     "webpack-merge": "^6.0.1"
   },
   "resolutions": {
     "serialize-javascript": "^7.0.5",
-    "uuid": "^11.1.1"
+    "uuid": "^11.1.1",
+    "fast-uri": "^3.1.5",
+    "js-yaml": "^4.3.1",
+    "dompurify": "^3.4.13",
+    "nanoid": "^3.3.18"
   }
 }
