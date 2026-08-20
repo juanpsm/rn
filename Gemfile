@@ -25,7 +25,12 @@ gem 'jbuilder', '~> 2.13'
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use Active Storage variant
-gem 'image_processing', '~> 1.12'
+gem 'image_processing', '~> 2.0'
+# image_processing 2.0 dejó de traer un backend por defecto: hasta la 1.x
+# declaraba mini_magick como dependencia y Bundler la instalaba sola. La app
+# usa mini_magick (ver config.active_storage.variant_processor), así que hay
+# que declararla a mano.
+gem 'mini_magick', '~> 5.0'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.18', require: false
