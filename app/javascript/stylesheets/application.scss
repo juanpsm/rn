@@ -1,3 +1,27 @@
+// FontAwesome 7 reescribió su SCSS al sistema de módulos de Dart Sass
+// (`@use`/`@forward`): la ruta de las tipografías dejó de ser la variable
+// global `$fa-font-path` (con `!default`, se podía fijar con una asignación
+// antes del `@import`) y pasó a ser `$font-path` dentro del módulo interno
+// `variables`, que sólo se puede configurar con `@use ... with (...)` — y
+// nada más que en la primera vez que ese módulo se carga en todo el bundle.
+//
+// `@use` tiene que ir antes que cualquier otra regla del archivo (incluidos
+// `@import` y las declaraciones de variables de más abajo), así que esta
+// configuración vive al principio del archivo en vez de al lado del resto de
+// FontAwesome.
+//
+// Hay que importar los estilos concretos aparte: `fontawesome.scss` sólo trae
+// el core y los códigos de cada ícono, mientras que los @font-face viven en
+// solid.scss / regular.scss. Importando nada más el paquete, el CSS quedaba
+// sin una sola declaración @font-face y los íconos salían en cuadraditos. La
+// app usa `fas` y `far`.
+@use "@fortawesome/fontawesome-free/scss/variables" with (
+  $font-path: "~@fortawesome/fontawesome-free/webfonts"
+);
+@use "@fortawesome/fontawesome-free/scss/fontawesome";
+@use "@fortawesome/fontawesome-free/scss/solid";
+@use "@fortawesome/fontawesome-free/scss/regular";
+
 // ---------------------------------------------------------------------------
 // Paleta
 // ---------------------------------------------------------------------------
@@ -29,18 +53,6 @@ $rn-accent-hover: #196e4b;
 // como color-contrast().
 @import "admin-lte";
 
-// FontAwesome como webfont. Hay que importar los estilos concretos aparte:
-// `fontawesome.scss` sólo trae el core y los códigos de cada ícono, mientras
-// que los @font-face viven en solid.scss / regular.scss. Importando nada más
-// el paquete, el CSS quedaba sin una sola declaración @font-face y los íconos
-// salían en cuadraditos. La app usa `fas` y `far`.
-//
-// `$fa-font-path` apunta al paquete porque el valor por defecto ("../webfonts")
-// es relativo a una ubicación que no existe en este bundle.
-$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
-@import "@fortawesome/fontawesome-free/scss/fontawesome";
-@import "@fortawesome/fontawesome-free/scss/solid";
-@import "@fortawesome/fontawesome-free/scss/regular";
 
 // Acento para las acciones de alta. Reemplaza al `bg-lime` de AdminLTE 3, que
 // la v4 eliminó y que además era un verde neón.
