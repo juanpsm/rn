@@ -25,12 +25,12 @@ gem 'jbuilder', '~> 2.13'
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use Active Storage variant
-gem 'image_processing', '~> 2.0'
+gem 'image_processing', '~> 2.1'
 # image_processing 2.0 dejó de traer un backend por defecto: hasta la 1.x
 # declaraba mini_magick como dependencia y Bundler la instalaba sola. La app
 # usa mini_magick (ver config.active_storage.variant_processor), así que hay
 # que declararla a mano.
-gem 'mini_magick', '~> 5.0'
+gem 'mini_magick', '~> 5.4'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.18', require: false
@@ -69,7 +69,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 # La descarga "por separado" empaqueta un PDF por nota en un ZIP: HTTP
 # devuelve una sola respuesta por request, así que no se pueden mandar N
 # archivos sueltos. Ruby no trae escritura de ZIP en la stdlib.
-gem 'rubyzip', '~> 3.5', require: 'zip'
+gem 'rubyzip', '~> 3.6', require: 'zip'
 gem 'wicked_pdf', '~> 2.8'
 # no sirve para win
 gem 'wkhtmltopdf-binary'
